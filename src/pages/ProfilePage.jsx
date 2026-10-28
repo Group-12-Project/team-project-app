@@ -1,24 +1,45 @@
 import { useState } from 'react'
+import ProfileEditForm from '../components/ProfileEditForm.jsx'
 import ProfileView from '../components/ProfileView.jsx'
-import { loadProfile } from '../services/profileService.js'
+import { saveProfile } from '../services/profileService.js'
 
-function ProfilePage({ mode = 'view' }) {
-  const [profile] = useState(loadProfile)
+function ProfilePage({ mode = 'view', onProfileChange, profile }) {
+  const [successMessage, setSuccessMessage] = useState('')
+
+  function openProfile() {
+    window.location.hash = '#/profile'
+  }
+
+  function handleSave(updatedProfile) {
+    const savedProfile = saveProfile(updatedProfile)
+    onProfileChange(savedProfile)
+    setSuccessMessage('Your profile changes were saved successfully.')
+    openProfile()
+  }
 
   if (mode === 'edit') {
     return (
-      <section className="card" aria-labelledby="edit-profile-heading">
-        <p className="eyebrow">Student profile</p>
-        <h1 id="edit-profile-heading">Edit profile</h1>
-        <p>The editable profile form is the next implementation milestone.</p>
-        <a className="button button--secondary" href="#/profile">
-          Cancel
-        </a>
-      </section>
+      <ProfileEditForm profile={profile} onCancel={openProfile} onSave={handleSave} />
     )
   }
 
-  return <ProfileView profile={profile} onEdit={() => (window.location.hash = '#/profile/edit')} />
+  return (
+    <>
+      {successMessage ? (
+        <div className="success-banner" role="status">
+          <span aria-hidden="true">✓</span>
+          {successMessage}
+        </div>
+      ) : null}
+      <ProfileView
+        profile={profile}
+        onEdit={() => {
+          setSuccessMessage('')
+          window.location.hash = '#/profile/edit'
+        }}
+      />
+    </>
+  )
 }
 
 export default ProfilePage

@@ -219,6 +219,19 @@ p {
   border-radius: 999px;
 }
 
+.editable-badge {
+  display: inline-flex;
+  width: fit-content;
+  padding: 5px 9px;
+  color: #694700;
+  font-size: 0.75rem;
+  font-weight: 800;
+  white-space: nowrap;
+  background: #fff3cf;
+  border: 1px solid #e8cc7f;
+  border-radius: 999px;
+}
+
 .status-pill {
   padding: 8px 12px;
 }
@@ -421,6 +434,116 @@ p {
   margin-top: 0;
 }
 
+.success-banner {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+  color: var(--green-900);
+  font-weight: 750;
+  background: #e4f3e9;
+  border: 1px solid #a9cbb7;
+  border-radius: 10px;
+}
+
+.success-banner > span {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  color: white;
+  background: var(--green-800);
+  border-radius: 50%;
+}
+
+.edit-form {
+  display: grid;
+  gap: 20px;
+}
+
+.form-section {
+  display: grid;
+  gap: 22px;
+}
+
+.form-section--read-only {
+  background: var(--surface-muted);
+  border-style: dashed;
+}
+
+.field {
+  display: grid;
+  gap: 7px;
+}
+
+.field label {
+  color: var(--green-900);
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.required-label {
+  margin-left: 6px;
+  color: #8b2b20;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  padding: 11px 12px;
+  color: var(--text);
+  background: white;
+  border: 1px solid #9eadA5;
+  border-radius: 7px;
+}
+
+.field textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.field input:hover,
+.field textarea:hover {
+  border-color: var(--green-700);
+}
+
+.field input[aria-invalid='true'],
+.field textarea[aria-invalid='true'] {
+  border-color: #b33a2b;
+  box-shadow: 0 0 0 1px #b33a2b;
+}
+
+.field-help,
+.field-error {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.field-help {
+  color: var(--text-muted);
+}
+
+.field-error {
+  color: #92291e;
+  font-weight: 700;
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.form-actions .button {
+  min-width: 140px;
+  margin-top: 0;
+}
+
 @media (max-width: 760px) {
   .topbar {
     padding: 0 18px;
@@ -483,6 +606,14 @@ p {
   .course-list li {
     display: grid;
     gap: 6px;
+  }
+
+  .form-actions {
+    display: grid;
+  }
+
+  .form-actions .button {
+    width: 100%;
   }
 }
 

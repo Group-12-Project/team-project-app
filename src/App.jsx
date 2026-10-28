@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import ProfilePage from './pages/ProfilePage.jsx'
+import { loadProfile } from './services/profileService.js'
 
 const navigationItems = [
   { label: 'Home', href: '#/' },
@@ -17,6 +18,7 @@ function getRoute() {
 
 function App() {
   const [route, setRoute] = useState(getRoute)
+  const [profile, setProfile] = useState(loadProfile)
 
   useEffect(() => {
     const handleHashChange = () => setRoute(getRoute())
@@ -32,9 +34,13 @@ function App() {
         </a>
         <div className="current-user" aria-label="Signed in user">
           <span className="current-user__avatar" aria-hidden="true">
-            JP
+            {profile.preferredName
+              .split(' ')
+              .map((name) => name[0])
+              .join('')
+              .slice(0, 2)}
           </span>
-          <span>James Peterson</span>
+          <span>{profile.preferredName}</span>
         </div>
       </header>
 
@@ -74,7 +80,11 @@ function App() {
               </a>
             </section>
           ) : route === 'profile' || route === 'profile/edit' ? (
-            <ProfilePage mode={route === 'profile/edit' ? 'edit' : 'view'} />
+            <ProfilePage
+              mode={route === 'profile/edit' ? 'edit' : 'view'}
+              profile={profile}
+              onProfileChange={setProfile}
+            />
           ) : (
             <section aria-labelledby="backlog-heading">
               <p className="eyebrow">Product backlog</p>
