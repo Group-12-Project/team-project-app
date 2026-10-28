@@ -78,6 +78,7 @@ function ProfileEditForm({ profile, onCancel, onSave }) {
               name="preferredName"
               type="text"
               value={draft.preferredName}
+              required
               maxLength={PROFILE_LIMITS.preferredName}
               aria-invalid={Boolean(errors.preferredName)}
               aria-describedby={errors.preferredName ? 'preferred-name-error' : 'preferred-name-help'}
@@ -128,6 +129,7 @@ function ProfileEditForm({ profile, onCancel, onSave }) {
               name="careerGoal"
               value={draft.careerGoal}
               rows="5"
+              required
               maxLength={PROFILE_LIMITS.careerGoal}
               aria-invalid={Boolean(errors.careerGoal)}
               aria-describedby={errors.careerGoal ? 'career-goal-error' : 'career-goal-help'}

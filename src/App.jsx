@@ -50,12 +50,14 @@ function App() {
             <ul className="nav-list">
               {navigationItems.map((item) => {
                 const itemRoute = item.href.replace(/^#\/?/, '') || 'home'
+                const isActive =
+                  route === itemRoute || (itemRoute === 'profile' && route.startsWith('profile/'))
                 return (
                   <li key={item.href}>
                     <a
-                      className={route === itemRoute ? 'nav-link nav-link--active' : 'nav-link'}
+                      className={isActive ? 'nav-link nav-link--active' : 'nav-link'}
                       href={item.href}
-                      aria-current={route === itemRoute ? 'page' : undefined}
+                      aria-current={isActive ? 'page' : undefined}
                     >
                       {item.label}
                     </a>

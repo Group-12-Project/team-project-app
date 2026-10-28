@@ -11,7 +11,8 @@ function isCourseRecord(course) {
     course &&
       typeof course.id === 'string' &&
       typeof course.code === 'string' &&
-      typeof course.title === 'string',
+      typeof course.title === 'string' &&
+      (typeof course.term === 'string' || course.term === undefined),
   )
 }
 
@@ -27,13 +28,20 @@ export function isProfile(value) {
       value.academicInterests.every((interest) => typeof interest === 'string') &&
       typeof value.careerGoal === 'string' &&
       Array.isArray(value.courseHistory) &&
-      value.courseHistory.every(isCourseRecord),
+      value.courseHistory.every(isCourseRecord) &&
+      Number.isFinite(value.creditsCompleted) &&
+      value.creditsCompleted >= 0 &&
+      Number.isFinite(value.creditsRequired) &&
+      value.creditsRequired > 0 &&
+      typeof value.expectedGraduation === 'string' &&
+      typeof value.gpa === 'string',
   )
 }
 
-export function loadProfile(storage = window.localStorage) {
+export function loadProfile(storage) {
   try {
-    const storedProfile = storage.getItem(PROFILE_STORAGE_KEY)
+    const targetStorage = storage ?? window.localStorage
+    const storedProfile = targetStorage.getItem(PROFILE_STORAGE_KEY)
 
     if (!storedProfile) {
       return clone(sampleProfile)
@@ -46,18 +54,20 @@ export function loadProfile(storage = window.localStorage) {
   }
 }
 
-export function saveProfile(profile, storage = window.localStorage) {
+export function saveProfile(profile, storage) {
   if (!isProfile(profile)) {
     throw new TypeError('A complete GradPath profile is required before saving.')
   }
 
   const profileToStore = clone(profile)
-  storage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(profileToStore))
+  const targetStorage = storage ?? window.localStorage
+  targetStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(profileToStore))
   return clone(profileToStore)
 }
 
-export function resetProfile(storage = window.localStorage) {
-  storage.removeItem(PROFILE_STORAGE_KEY)
+export function resetProfile(storage) {
+  const targetStorage = storage ?? window.localStorage
+  targetStorage.removeItem(PROFILE_STORAGE_KEY)
   return clone(sampleProfile)
 }
 
