@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import ProfilePage from './pages/ProfilePage.jsx'
 
 const navigationItems = [
   { label: 'Home', href: '#/' },
@@ -72,12 +73,8 @@ function App() {
                 View my profile
               </a>
             </section>
-          ) : route === 'profile' ? (
-            <section aria-labelledby="profile-placeholder-heading">
-              <p className="eyebrow">Student profile</p>
-              <h1 id="profile-placeholder-heading">My Profile</h1>
-              <p>The profile workspace is ready for the Sprint 1 feature.</p>
-            </section>
+          ) : route === 'profile' || route === 'profile/edit' ? (
+            <ProfilePage mode={route === 'profile/edit' ? 'edit' : 'view'} />
           ) : (
             <section aria-labelledby="backlog-heading">
               <p className="eyebrow">Product backlog</p>
