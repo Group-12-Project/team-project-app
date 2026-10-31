@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Welcome back · GradPath</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <a class="brand" href="index.html">GradPath</a>
+  </header>
+
+  <main class="workspace">
+    <div class="screen">
+      <section class="welcome" aria-labelledby="welcome-title">
+        <h1 class="t-display" id="welcome-title">Make a plan.<br>Build your future.</h1>
+        <p class="t-body">Keep your classes, schedule, and career next steps in one place.</p>
+        <div class="callout">
+          <h2 class="t-heading">Built around student life</h2>
+          <p class="t-small">A simple way to plan your semester, learn from other students, and prepare for your next opportunity.</p>
+        </div>
+      </section>
+
+      <section class="card" aria-labelledby="form-title">
+        <h2 class="t-title" id="form-title">Welcome back</h2>
+        <p class="t-body">Log in to GradPath</p>
+        <p class="t-body" id="form-intro">Plan your classes. Prepare for what comes next.</p>
+        <div class="alert" id="form-error" role="alert" hidden>
+          Enter your university email and password to continue.
+        </div>
+
+        <form class="form" id="login-form" novalidate>
+          <div class="field">
+            <label for="email">University email</label>
+            <input class="input" id="email" name="email" type="email"
+                   placeholder="Enter your email" autocomplete="email" required>
+          </div>
+          <div class="field">
+            <label for="password">Password</label>
+            <input class="input" id="password" name="password" type="password"
+                   placeholder="Enter your password" autocomplete="current-password" required>
+          </div>
+          <button class="btn btn-primary" type="submit">Log in</button>
+        </form>
+
+        <a class="btn btn-text" href="reset.html">Forgot password?</a>
+        <a class="btn btn-secondary" href="signup.html">Create an account</a>
+      </section>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

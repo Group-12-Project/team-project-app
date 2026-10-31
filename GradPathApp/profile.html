@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Profile · GradPath</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <a class="brand" href="home.html">GradPath</a>
+    <a class="header-user" href="profile.html" data-user-fullname></a>
+  </header>
+
+  <div class="app-shell">
+    <nav class="sidebar" aria-label="Main">
+      <a class="nav-link" href="home.html">Home</a>
+      <a class="nav-link" href="classes.html">Classes</a>
+      <a class="nav-link" href="schedule.html">Schedule</a>
+      <a class="nav-link" href="career.html">Career Readiness</a>
+      <a class="nav-link" href="ratings.html">Course ratings</a>
+      <a class="nav-link" href="profile.html" aria-current="page">My Profile</a>
+      <a class="nav-link" href="settings.html">Preferences</a>
+      <p class="t-caption">SPRING 2027</p>
+      <p class="t-small sidebar-note">Plan your next semester.</p>
+      <a class="nav-link" href="index.html">Log out</a>
+    </nav>
+
+    <main class="page">
+      <div class="page-inner">
+        <a class="back-link" href="home.html">← Back</a>
+        <h1 class="page-title">My Profile</h1>
+
+        <div class="home-grid">
+          <div class="stack" id="main-col">
+            <p class="notice" id="saved-notice" role="status" hidden>Profile updated successfully.</p>
+            <!-- Profile sections are rendered by profile.js from GradPathProfile.getProfile() -->
+          </div>
+
+          <aside class="stack" aria-label="Preferences and next steps">
+            <section class="content-card" aria-labelledby="sched-pref">
+              <h2 class="t-heading" id="sched-pref">Schedule preferences</h2>
+              <div class="lines" id="sched-lines"></div>
+            </section>
+            <a class="btn btn-secondary" href="settings.html">Edit preferences</a>
+            <a class="content-card" href="career.html">
+              <h2 class="t-heading">Career Readiness</h2>
+              <p class="t-small">Turn your career goal into practical next steps.</p>
+              <span class="card-action">Explore career steps →</span>
+            </a>
+          </aside>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="profile-data.js"></script>
+  <script src="profile-service.js"></script>
+  <script src="profile.js"></script>
+</body>
+</html>

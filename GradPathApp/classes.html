@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Browse classes · GradPath</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <a class="brand" href="home.html">GradPath</a>
+    <a class="header-user" href="profile.html" data-user-fullname>James Peterson</a>
+  </header>
+
+  <div class="app-shell">
+    <nav class="sidebar" aria-label="Main">
+      <a class="nav-link" href="home.html">Home</a>
+      <a class="nav-link" href="classes.html" aria-current="page">Classes</a>
+      <a class="nav-link" href="schedule.html">Schedule</a>
+      <a class="nav-link" href="career.html">Career Readiness</a>
+      <a class="nav-link" href="ratings.html">Course ratings</a>
+      <a class="nav-link" href="profile.html">My Profile</a>
+      <a class="nav-link" href="settings.html">Preferences</a>
+      <p class="t-caption">SPRING 2027</p>
+      <p class="t-small sidebar-note">Plan your next semester.</p>
+      <a class="nav-link" href="index.html">Log out</a>
+    </nav>
+
+    <main class="page">
+      <div class="page-inner">
+        <button class="back-link" type="button" id="back-btn" hidden>← Back</button>
+        <h1 class="page-title" id="page-title">Browse classes</h1>
+        <p class="t-body" id="page-subtitle">Plan for Spring 2027.</p>
+
+        <div class="home-grid">
+          <div class="stack">
+            <form class="field" id="search-form" role="search" novalidate>
+              <label for="search">Search classes</label>
+              <input class="input" id="search" name="q" type="search"
+                     placeholder="Search by title or skill" autocomplete="off">
+            </form>
+
+            <div class="filter-row" id="filters" role="group" aria-label="Filter classes">
+              <button class="filter-btn" type="button" data-filter="all" aria-pressed="true">All classes</button>
+              <button class="filter-btn" type="button" data-filter="technical" aria-pressed="false">Technical skills</button>
+            </div>
+
+            <p class="result-count" id="result-count" role="status" hidden></p>
+
+            <div class="stack" id="class-list"></div>
+
+            <section class="content-card" id="empty-state" hidden>
+              <h2 class="t-heading">No classes found</h2>
+              <p class="t-small">Try a broader title or a skill such as SQL.</p>
+            </section>
+
+            <button class="btn btn-secondary btn-inline" type="button" id="clear-btn" hidden>Clear search</button>
+          </div>
+
+          <aside class="stack" aria-label="Planning help">
+            <section class="content-card" aria-labelledby="spring-plan">
+              <h2 class="t-heading" id="spring-plan">Your spring plan</h2>
+              <p class="t-small">Build a manageable schedule. Check meeting times and prerequisites before adding a class.</p>
+            </section>
+            <a class="content-card" href="career.html">
+              <h2 class="t-heading">Career Readiness</h2>
+              <p class="t-small">Connect what you study to skills you can use at work.</p>
+              <span class="card-action">Explore career steps →</span>
+            </a>
+          </aside>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="classes.js"></script>
+</body>
+</html>

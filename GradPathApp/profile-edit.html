@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Edit profile · GradPath</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <a class="brand" href="home.html">GradPath</a>
+    <a class="header-user" href="profile.html" data-user-fullname></a>
+  </header>
+
+  <div class="app-shell">
+    <nav class="sidebar" aria-label="Main">
+      <a class="nav-link" href="home.html">Home</a>
+      <a class="nav-link" href="classes.html">Classes</a>
+      <a class="nav-link" href="schedule.html">Schedule</a>
+      <a class="nav-link" href="career.html">Career Readiness</a>
+      <a class="nav-link" href="ratings.html">Course ratings</a>
+      <a class="nav-link" href="profile.html" aria-current="page">My Profile</a>
+      <a class="nav-link" href="settings.html">Preferences</a>
+      <p class="t-caption">SPRING 2027</p>
+      <p class="t-small sidebar-note">Plan your next semester.</p>
+      <a class="nav-link" href="index.html">Log out</a>
+    </nav>
+
+    <main class="page">
+      <div class="page-inner">
+        <a class="back-link" href="profile.html">← Back</a>
+        <h1 class="page-title">Edit profile</h1>
+        <p class="t-body">Keep your academic information up to date.</p>
+
+        <div class="home-grid">
+          <form class="stack" id="edit-form" novalidate>
+            <div class="alert" id="form-alert" role="alert" hidden></div>
+
+            <div class="field">
+              <label for="fullName">Full name</label>
+              <input class="input" id="fullName" name="fullName" type="text" autocomplete="name" aria-describedby="fullName-error">
+              <p class="field-error" id="fullName-error" hidden></p>
+            </div>
+            <div class="field">
+              <label for="preferredName">Preferred name <span class="t-small">(optional)</span></label>
+              <input class="input" id="preferredName" name="preferredName" type="text" autocomplete="nickname">
+            </div>
+            <div class="field">
+              <label for="major">Major</label>
+              <input class="input" id="major" name="major" type="text" aria-describedby="major-error">
+              <p class="field-error" id="major-error" hidden></p>
+            </div>
+            <div class="field">
+              <label for="concentration">Concentration <span class="t-small">(optional)</span></label>
+              <input class="input" id="concentration" name="concentration" type="text">
+            </div>
+            <div class="field">
+              <label for="expectedGraduation">Expected graduation</label>
+              <input class="input" id="expectedGraduation" name="expectedGraduation" type="text" aria-describedby="expectedGraduation-error">
+              <p class="field-error" id="expectedGraduation-error" hidden></p>
+            </div>
+            <div class="field">
+              <label for="currentYear">Current year</label>
+              <input class="input" id="currentYear" name="currentYear" type="text" aria-describedby="currentYear-error">
+              <p class="field-error" id="currentYear-error" hidden></p>
+            </div>
+            <div class="field">
+              <label for="gpa">Current GPA <span class="t-small">(optional)</span></label>
+              <input class="input" id="gpa" name="gpa" type="text" inputmode="decimal" aria-describedby="gpa-error">
+              <p class="field-error" id="gpa-error" hidden></p>
+            </div>
+            <div class="field">
+              <label for="careerGoal">Career goal <span class="t-small">(optional)</span></label>
+              <input class="input" id="careerGoal" name="careerGoal" type="text">
+            </div>
+            <div class="field">
+              <label for="interests">Interests <span class="t-small">(optional)</span></label>
+              <input class="input" id="interests" name="interests" type="text" aria-describedby="interests-hint">
+              <p class="field-hint" id="interests-hint">Separate interests with commas.</p>
+            </div>
+
+            <button class="btn btn-primary" type="submit">Save changes</button>
+            <a class="btn btn-text" href="profile.html">Cancel</a>
+          </form>
+
+          <aside class="stack" aria-label="About your information">
+            <section class="content-card" aria-labelledby="your-info">
+              <h2 class="t-heading" id="your-info">Your information</h2>
+              <p class="t-small">Profile details are entered by you. Review your degree progress with your advisor.</p>
+            </section>
+            <a class="btn btn-secondary" href="settings.html">Edit schedule preferences</a>
+          </aside>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="profile-data.js"></script>
+  <script src="profile-service.js"></script>
+  <script src="profile-edit.js"></script>
+</body>
+</html>

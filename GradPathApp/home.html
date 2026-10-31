@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Home · GradPath</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <a class="brand" href="home.html">GradPath</a>
+    <a class="header-user" href="profile.html" data-user-fullname>James Peterson</a>
+  </header>
+
+  <div class="app-shell">
+    <nav class="sidebar" aria-label="Main">
+      <a class="nav-link" href="home.html" aria-current="page">Home</a>
+      <a class="nav-link" href="classes.html">Classes</a>
+      <a class="nav-link" href="schedule.html">Schedule</a>
+      <a class="nav-link" href="career.html">Career Readiness</a>
+      <a class="nav-link" href="ratings.html">Course ratings</a>
+      <a class="nav-link" href="profile.html">My Profile</a>
+      <a class="nav-link" href="settings.html">Preferences</a>
+      <p class="t-caption" data-term>SPRING 2027</p>
+      <p class="t-small sidebar-note">Plan your next semester.</p>
+      <a class="nav-link" href="index.html">Log out</a>
+    </nav>
+
+    <main class="page">
+      <div class="page-inner">
+        <h1 class="page-title">Hi, <span data-user-firstname>James</span></h1>
+        <p class="t-body">A clear plan for your classes and your career.</p>
+
+        <div class="home-grid">
+          <div class="stack">
+            <section class="content-card" aria-labelledby="next-sem">
+              <h2 class="t-heading" id="next-sem">Your next semester starts here</h2>
+              <p class="t-small">Plan a schedule that fits your goals, then choose a career step to work on.</p>
+            </section>
+
+            <div class="card-row">
+              <a class="content-card" href="classes.html">
+                <h2 class="t-heading">Classes</h2>
+                <p class="t-small">Browse classes and review prerequisites.</p>
+                <span class="card-action">Explore classes →</span>
+              </a>
+              <a class="content-card" href="schedule.html">
+                <h2 class="t-heading">My schedule</h2>
+                <p class="t-small">Review your planned classes for <span data-term-name>Spring 2027</span>.</p>
+                <span class="card-action">View schedule →</span>
+              </a>
+            </div>
+
+            <div class="card-row">
+              <a class="content-card" href="career.html">
+                <h2 class="t-heading">Career Readiness</h2>
+                <p class="t-small">Build experience, learn skills, and practice interviews.</p>
+                <span class="card-action">Choose a next step →</span>
+              </a>
+              <a class="content-card" href="ratings.html">
+                <h2 class="t-heading">Course ratings</h2>
+                <p class="t-small">See what other students thought about their classes.</p>
+                <span class="card-action">Read ratings →</span>
+              </a>
+            </div>
+          </div>
+
+          <aside class="stack" aria-label="Your progress">
+            <section class="progress-card" aria-labelledby="progress-title">
+              <h2 class="t-heading" id="progress-title">Degree progress</h2>
+              <p class="t-small" id="credits-summary">93 of 120 credits completed</p>
+              <div class="progress-track" role="progressbar" id="progress-bar"
+                   aria-labelledby="progress-title" aria-valuemin="0" aria-valuemax="120" aria-valuenow="93">
+                <div class="progress-fill" id="progress-fill"></div>
+              </div>
+              <p class="t-caption" id="credits-remaining">27 credits remaining</p>
+            </section>
+
+            <a class="content-card" href="profile.html">
+              <h2 class="t-heading">My Profile</h2>
+              <p class="t-small card-body" id="profile-summary">Computer Science · Senior
+Graduating May 2027</p>
+              <span class="card-action">View profile →</span>
+            </a>
+
+            <a class="content-card" href="career-plan.html">
+              <h2 class="t-heading">My next steps</h2>
+              <p class="t-small">See the career opportunities you have saved.</p>
+              <span class="card-action">Open my next steps →</span>
+            </a>
+          </aside>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="profile-data.js"></script>
+  <script src="profile-service.js"></script>
+  <script src="home.js"></script>
+</body>
+</html>
