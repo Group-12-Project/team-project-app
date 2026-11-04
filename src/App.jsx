@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import ProfilePage from './pages/ProfilePage.jsx'
+import { loadProfile } from './services/profileService.js'
 
 const navigationItems = [
   { label: 'Home', href: '#/' },
@@ -16,6 +18,7 @@ function getRoute() {
 
 function App() {
   const [route, setRoute] = useState(getRoute)
+  const [profile, setProfile] = useState(loadProfile)
 
   useEffect(() => {
     const handleHashChange = () => setRoute(getRoute())
@@ -31,9 +34,13 @@ function App() {
         </a>
         <div className="current-user" aria-label="Signed in user">
           <span className="current-user__avatar" aria-hidden="true">
-            JP
+            {profile.preferredName
+              .split(' ')
+              .map((name) => name[0])
+              .join('')
+              .slice(0, 2)}
           </span>
-          <span>James Peterson</span>
+          <span>{profile.preferredName}</span>
         </div>
       </header>
 
@@ -43,12 +50,14 @@ function App() {
             <ul className="nav-list">
               {navigationItems.map((item) => {
                 const itemRoute = item.href.replace(/^#\/?/, '') || 'home'
+                const isActive =
+                  route === itemRoute || (itemRoute === 'profile' && route.startsWith('profile/'))
                 return (
                   <li key={item.href}>
                     <a
-                      className={route === itemRoute ? 'nav-link nav-link--active' : 'nav-link'}
+                      className={isActive ? 'nav-link nav-link--active' : 'nav-link'}
                       href={item.href}
-                      aria-current={route === itemRoute ? 'page' : undefined}
+                      aria-current={isActive ? 'page' : undefined}
                     >
                       {item.label}
                     </a>
@@ -72,12 +81,12 @@ function App() {
                 View my profile
               </a>
             </section>
-          ) : route === 'profile' ? (
-            <section aria-labelledby="profile-placeholder-heading">
-              <p className="eyebrow">Student profile</p>
-              <h1 id="profile-placeholder-heading">My Profile</h1>
-              <p>The profile workspace is ready for the Sprint 1 feature.</p>
-            </section>
+          ) : route === 'profile' || route === 'profile/edit' ? (
+            <ProfilePage
+              mode={route === 'profile/edit' ? 'edit' : 'view'}
+              profile={profile}
+              onProfileChange={setProfile}
+            />
           ) : (
             <section aria-labelledby="backlog-heading">
               <p className="eyebrow">Product backlog</p>
