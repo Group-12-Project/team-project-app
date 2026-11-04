@@ -1,43 +1,147 @@
 # GradPath
 
-A Graduate Student Pathway app with a Node.js command-line planner and a browser demo based on the [GradPath Figma web prototype](https://www.figma.com/design/UdKLxRySUFayJww0xsZJWR/?node-id=4-469).
+GradPath is a graduate-degree planning application for prospective students, current graduate
+students, returning students, alumni, and academic advisors. The Sprint 1 increment implements a
+functional current-student profile flow.
 
-## Run
+## Sprint 1 feature: student profile
 
-```sh
+A current graduate student can:
+
+- Open **My Profile** from the GradPath navigation.
+- Review their name, academic status, graduate program, specialization, interests, goal, degree
+  progress, and course-history summary.
+- Clearly distinguish official read-only academic information from editable information.
+- Edit their preferred name, academic interests, and academic or career goal.
+- Receive field-level feedback when required information is invalid.
+- Save valid changes and receive a visible confirmation.
+- Cancel without changing the previously saved profile.
+- Retain saved changes after navigation or browser refresh.
+- See understandable empty states when optional information is unavailable.
+
+The implementation uses fictional data and browser `localStorage`. It does not connect to UNC
+Charlotte systems or contain real student records.
+
+### Planning and design links
+
+- [Canonical consolidated feature backlog — Issue #27](https://github.com/Group-12-Project/team-project-app/issues/27)
+- [Implemented user story — Issue #26](https://github.com/Group-12-Project/team-project-app/issues/26)
+- [Sprint 1 implementation tracker — Issue #16](https://github.com/Group-12-Project/team-project-app/issues/16)
+- [GradPath App — Development project](https://github.com/orgs/Group-12-Project/projects/1)
+- [Figma profile view](https://www.figma.com/design/UdKLxRySUFayJww0xsZJWR/GradPath-%E2%80%94-Final-Mobile---Web-UI?node-id=6-3794)
+- [Figma profile editing](https://www.figma.com/design/UdKLxRySUFayJww0xsZJWR/GradPath-%E2%80%94-Final-Mobile---Web-UI?node-id=6-3902)
+- [Figma saved state](https://www.figma.com/design/UdKLxRySUFayJww0xsZJWR/GradPath-%E2%80%94-Final-Mobile---Web-UI?node-id=6-4040)
+
+## Technology
+
+- React 19 for the user interface
+- Vite 8 for local development and production builds
+- Browser hash routing for this focused prototype
+- Versioned `localStorage` persistence through a dedicated profile service
+- Vitest, jsdom, and Testing Library for behavior-focused automated tests
+- ESLint for static analysis
+
+See [the architecture and implementation plan](docs/architecture.md) for the component and data
+flow.
+
+## Prerequisites
+
+- Node.js 22.12 or newer (a current LTS release is recommended)
+- npm
+
+The implementation was verified with Node.js 26.13.0 LTS and npm 11.20.0.
+
+## Installation
+
+```bash
+git clone https://github.com/Group-12-Project/team-project-app.git
+cd team-project-app
 npm install
-npm run web
 ```
 
-Open http://localhost:3000. Enter any valid email and a nonempty password to enter the demo. The server binds to localhost; use `PORT=3001 npm run web` to choose another port.
+## Running locally
 
-The existing command-line app remains available:
+```bash
+npm run dev
+```
 
-```sh
-npm start -- --completed GRA-501,GRA-530 --credits 9
+Open the local URL printed by Vite, normally `http://localhost:5173`, and select **My Profile**.
+The profile can also be opened directly at `http://localhost:5173/#/profile`.
+
+## Testing and verification
+
+Run the complete verification sequence before opening or merging a pull request:
+
+```bash
+npm run lint
 npm test
+npm run build
 ```
 
-## Implemented design flows
+- `npm run lint` checks JavaScript and JSX for blocking static-analysis issues.
+- `npm test` runs the profile route, view, empty-state, validation, save, cancel, service, and
+  persistence tests once.
+- `npm run build` creates the production bundle in `dist/`.
 
-- Welcome/login, account creation with password confirmation, and password-reset demo.
-- Home dashboard and responsive application navigation.
-- Profile viewing/editing and success notice.
-- Preferences editing/saving and success notice.
-- Schedule: weekly plan, planned credits, and remove-class confirmation.
-- Course ratings: ratings list and search, class ratings, write a review, and review posted.
-- Career Readiness: hub, clubs, skills, internships, opportunity details, saved next steps, completed steps, and interview practice.
-- Classes: browse, search by title or skill, the technical-skills filter, class detail, add-to-plan, class-added confirmation, and schedule-conflict warning.
-- Logout confirmation.
+The current criterion-by-criterion record is in
+[docs/acceptance-test-results.md](docs/acceptance-test-results.md). Manual Figma comparison and the
+required demonstration evidence must still be captured by the team before submission.
 
-This is a frontend demo, not an authentication system. Credentials are never transmitted or persisted. A tab-local session enables demo navigation. Profile, preferences, and the planned classes are stored in localStorage on this device. Degree progress and class eligibility are sample data from Figma, not verified academic records. Password reset explicitly reports that no email was sent. Adding a class does not enroll the student.
+Chrome local-render evidence:
 
-## Remaining design work
+- [Profile view at 1440×1000](docs/evidence/profile-view.png)
+- [Profile editing at 1440×1000](docs/evidence/profile-edit.png)
+- [Profile view at a true 390×844 Chrome viewport](docs/evidence/profile-mobile-chrome.png)
 
-Figma's Starter-plan tool limit prevented retrieving high-fidelity design context for profile setup, role selection, and administration. These sections are intentionally marked unavailable rather than represented as completed. The linked page contains 47 frames/states; this implementation covers the design context that was successfully retrieved. Mobile layouts adapt the web design; the separate mobile prototype has not been inspected.
+The complete deliverable manifest and remaining evidence are tracked in
+[docs/submission-checklist.md](docs/submission-checklist.md).
 
-The codebase contained no existing UI components or design library. The implementation shares native HTML form/button/card primitives and CSS tokens using the Figma colors, spacing, and typography sizes. Retrieved screens contained no static image or SVG assets. Inter is requested with Arial as a fallback; no font file was supplied or bundled.
+## Development workflow
 
-## Verification
+The feature is progressing through the required Sprint 1 workflow:
 
-`npm test` covers the original planner plus static-file serving, demo navigation, password confirmation, profile escaping/persistence, preferences, and course-add state. `node --check public/app.js` checks browser JavaScript syntax. Browser screenshot comparison could not run because the browser access host was unavailable.
+1. Product Backlog Item and acceptance criteria in Issue #26
+2. Sprint selection, sizing, ownership, priority, and status on the GitHub Project
+3. Profile-view, edit, and saved-state Figma references
+4. Implementation on `feature/profile-foundation`
+5. Incremental commits for scaffold, profile display, editing/persistence, and tests/documentation
+6. Automated verification and Chrome local-render checks are complete; required manual checks remain
+7. Pull request review, merge, and final evidence updates remain pending
+
+Do not merge the branch until a teammate has reviewed it and the remaining manual checks are
+recorded.
+
+## Sprint 1 responsibility map
+
+| GitHub account | Assigned work |
+| --- | --- |
+| `johnmi-works` | Application foundation and integration — #28 |
+| `dsehgal-projects` | Profile read-only summary UI — #29 |
+| `Ian-Peterson` | Editing, validation, and persistence — #30 |
+| `nwhitton-hash` | Tests, documentation, and demonstration evidence — #31 |
+
+This table records planned responsibility, not proof of contribution. Final contribution statements
+must reflect the work each teammate actually completes. Repository Write access is still required
+before a teammate can make code-bearing contributions.
+
+## AI-assisted development disclosure
+
+OpenAI Codex assisted with organizing the Product Backlog Items, interpreting the selected Figma
+profile direction, scaffolding the application, proposing implementation code, and developing tests
+and documentation. The GradPath team is responsible for reviewing the code, running the application
+and tests, comparing the result with Figma, correcting problems, and approving the final pull
+request.
+
+The assignment separately requires evidence of GitHub Copilot and the Figma MCP Server operating in
+VS Code. This README does not claim that those screenshots or the required Copilot/Figma MCP session
+have been completed.
+
+Team review record: pending. Before submission, teammates must record what they actually reviewed,
+modified, tested, or verified; planned assignments alone are not contribution evidence.
+
+## Privacy and scope
+
+- All included names, academic records, interests, and goals are fictional sample data.
+- Production authentication and university-system integration are intentionally out of scope.
+- Course discovery, ratings, advising, schedule planning, recommendations, and AI interview practice
+  remain separate backlog features.
