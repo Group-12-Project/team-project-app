@@ -118,7 +118,7 @@ recorded.
 
 | GitHub account | Assigned responsibility | Task links |
 | --- | --- | --- |
-| `johnmi-works` | Application foundation and shared profile contract; integration, UI reconciliation, final technical verification, and PR preparation | [#28](https://github.com/Group-12-Project/team-project-app/issues/28), [#35](https://github.com/Group-12-Project/team-project-app/issues/35) |
+| `johnmi-works` | Project setup and kickoff; application foundation and shared profile contract; integration, UI reconciliation, final technical verification, and PR preparation | [#28](https://github.com/Group-12-Project/team-project-app/issues/28), [#35](https://github.com/Group-12-Project/team-project-app/issues/35) |
 | `nwhitton-hash` | Profile data and read-only view, persistence, and related tests | [#29](https://github.com/Group-12-Project/team-project-app/issues/29) |
 | `Ian-Peterson` | Profile editing and validation, save/cancel behavior, and related tests | [#30](https://github.com/Group-12-Project/team-project-app/issues/30) |
 | `dsehgal-projects` | Acceptance testing, Figma comparison, responsive and keyboard checks, documentation, demonstration evidence, and final review | [#31](https://github.com/Group-12-Project/team-project-app/issues/31) |
