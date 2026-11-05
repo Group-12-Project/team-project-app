@@ -116,16 +116,15 @@ recorded.
 
 ## Sprint 1 responsibility map
 
-| GitHub account | Assigned work |
-| --- | --- |
-| `johnmi-works` | Application foundation and integration — #28 |
-| `dsehgal-projects` | Profile read-only summary UI — #29 |
-| `Ian-Peterson` | Editing, validation, and persistence — #30 |
-| `nwhitton-hash` | Tests, documentation, and demonstration evidence — #31 |
+| GitHub account | Assigned responsibility | Task links |
+| --- | --- | --- |
+| `johnmi-works` | Application foundation and shared profile contract; integration, UI reconciliation, final technical verification, and PR preparation | [#28](https://github.com/Group-12-Project/team-project-app/issues/28), [#35](https://github.com/Group-12-Project/team-project-app/issues/35) |
+| `nwhitton-hash` | Profile data and read-only view, persistence, and related tests | [#29](https://github.com/Group-12-Project/team-project-app/issues/29) |
+| `Ian-Peterson` | Profile editing and validation, save/cancel behavior, and related tests | [#30](https://github.com/Group-12-Project/team-project-app/issues/30) |
+| `dsehgal-projects` | Acceptance testing, Figma comparison, responsive and keyboard checks, documentation, demonstration evidence, and final review | [#31](https://github.com/Group-12-Project/team-project-app/issues/31) |
 
-This table records planned responsibility, not proof of contribution. Final contribution statements
-must reflect the work each teammate actually completes. Repository Write access is still required
-before a teammate can make code-bearing contributions.
+This map reflects the current Sprint 1 task assignments. Completion and review are tracked in the
+linked issues and pull requests; an assignment alone does not indicate completed work.
 
 ## AI-assisted development disclosure
 
