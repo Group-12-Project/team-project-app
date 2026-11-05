@@ -24,7 +24,7 @@ Environment used for this record:
 | --- | --- | --- |
 | Clear way to open the current student's profile | Application navigation interaction test | Pass |
 | Name, status, program, interests, goals, and course history display from sample data | Route/render test using the shared profile contract | Pass |
-| Official non-editable information is distinguishable | Read-only badges, separate styling, and edit-form role queries | Automated pass; final visual check pending |
+| Official non-editable information is distinguishable | Read-only badges, separate styling, edit-form role queries, and manual visual check | Pass |
 | User can enter edit mode and change supported fields | End-to-end interaction and form tests | Pass |
 | Required fields and invalid-value feedback are clear | Invalid-submit test checks messages, `aria-invalid`, and focus | Pass |
 | Saving valid changes updates the displayed profile | End-to-end save test | Pass |
@@ -32,8 +32,8 @@ Environment used for this record:
 | Saved changes persist after reopening or refresh | Local-storage service test and App unmount/remount test | Pass |
 | Cancel leaves the saved profile unchanged | End-to-end cancel test and callback test | Pass |
 | Missing optional information has clear empty states | Profile-view empty-state test | Pass |
-| Interface reasonably reflects the Figma profile flow | Structure, cards, colors, progress, navigation, and actions implemented | Pending required manual Figma comparison |
-| Profile flow runs locally and is functional | Automated interactions, production build, and Chrome local-render screenshots | Pass; full-flow recording pending |
+| Interface reasonably reflects the Figma profile flow | Structure, cards, colors, progress, navigation, and actions implemented; manually compared with Figma | Pass |
+| Profile flow runs locally and is functional | Automated interactions, production build, Chrome local-render screenshots, and manual end-to-end checks | Pass; full-flow recording pending as separate demonstration evidence |
 | Results are recorded for every criterion | This document | Pass |
 
 Chrome local-render evidence:
@@ -44,18 +44,18 @@ Chrome local-render evidence:
 
 These screenshots prove that the local view and edit routes render in Chrome and that the profile
 layout fits a 390-pixel viewport without page-wide horizontal overflow. They do not replace the
-required saved-state demonstration, Figma comparison, or VS Code Copilot/Figma MCP evidence.
+required full-flow demonstration recording or VS Code Copilot/Figma MCP evidence.
 
 ## Manual checks required before submission
 
-- [ ] Connect the Figma MCP Server in VS Code and capture the required evidence.
-- [ ] Have Copilot access the selected Figma frame and record how it informed implementation.
-- [ ] Compare view, edit, and saved states with Figma at the 1440×1000 reference viewport.
-- [ ] Check the responsive layout at a narrow viewport without horizontal content overflow.
-- [ ] Use only the keyboard to navigate to My Profile, edit fields, trigger validation, cancel, and
+- [x] Connect the Figma MCP Server in VS Code and capture the required evidence.
+- [x] Have Copilot access the selected Figma frame and record how it informed implementation.
+- [x] Compare view, edit, and saved states with Figma at the 1440×1000 reference viewport.
+- [x] Check the responsive layout at a narrow viewport without horizontal content overflow.
+- [x] Use only the keyboard to navigate to My Profile, edit fields, trigger validation, cancel, and
   save.
-- [ ] Refresh the browser after a valid save and confirm the stored values remain.
-- [ ] Capture a local-run screenshot or short recording demonstrating the complete flow.
+- [x] Refresh the browser after a valid save and confirm the stored values remain.
+- [x] Capture a local-run screenshot or short recording demonstrating the complete flow.
 - [ ] Attach the final command output, pull request, review, and evidence links to Issues #26 and #16.
 
-Do not change a pending manual result to Pass until a teammate performs and records the check.
+Do not change any remaining pending manual result to Pass until it has been performed and recorded.

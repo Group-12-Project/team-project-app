@@ -84,8 +84,11 @@ npm run build
 - `npm run build` creates the production bundle in `dist/`.
 
 The current criterion-by-criterion record is in
-[docs/acceptance-test-results.md](docs/acceptance-test-results.md). Manual Figma comparison and the
-required demonstration evidence must still be captured by the team before submission.
+[docs/acceptance-test-results.md](docs/acceptance-test-results.md). All automated acceptance checks
+and project verification commands passed with no blocking issues. The remaining manual acceptance
+checks and demonstration evidence are still pending, so not all acceptance criteria have been
+confirmed yet. The supporting acceptance results and
+[submission checklist](docs/submission-checklist.md) are included in the GitHub repository.
 
 Chrome local-render evidence:
 
