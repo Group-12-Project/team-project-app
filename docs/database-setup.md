@@ -77,6 +77,10 @@ browser storage pending John's profile API integration.
 
 ## Host the backend with Prisma Compute
 
+For the **grad-path** project and the **backend-database** branch, use the
+[preview deployment instructions](prisma-preview.md). They configure the Composer
+entry and GitHub Actions workflow without merging into main.
+
 The package names its backend entry point with `"start": "bun server/index.ts"`.
 Prisma Compute supplies the Bun runtime; local Node development can continue with
 `npm run server:dev`. The existing Node HTTP server is compatible with Bun.
@@ -166,7 +170,8 @@ Non-secret configuration: [environment template](../.env.example),
 
 The earlier local MySQL setup was committed as `2c9a5f5` and was not pushed because
 publication was declined. The PostgreSQL transition is a subsequent local change;
-its commit/PR URL and hosted connection evidence remain pending. Do not use the
-old MySQL connection check as proof of a hosted Prisma Postgres connection.
+its final commit/PR URL still needs recording. Hosted PostgreSQL migration, seed,
+and connection checks now passed; see [verification evidence](database-verification.md).
+Do not use the old MySQL connection check as proof of a hosted Prisma Postgres connection.
 
 Official guide: https://www.prisma.io/docs/postgres
