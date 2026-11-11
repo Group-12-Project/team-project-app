@@ -40,7 +40,8 @@ jobs:
           working-directory: deploy
           install-command: npm ci
           build-command: npm run check:config && npm run build && npm run typecheck && npm run smoke
-          environment: backend-database
+          # Separate Composer state from the manually created database environment.
+          environment: backend-preview
       - name: Require an actual deployment
         if: steps.deploy.outputs.outcome != 'succeeded'
         run: |

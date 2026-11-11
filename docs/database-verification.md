@@ -44,7 +44,9 @@ verification above ran through the backend Prisma client using `db:check`.
 ## Backend preview packaging
 
 Added an isolated Composer deployment package for **grad-path** and a workflow
-restricted to **backend-database**, with an explicit preview environment. Its
+restricted to **backend-database**, with an explicit preview environment. The
+deployment target is now **backend-preview**, separate from the manually created
+database environment, to avoid initializing Composer state over existing resources. Its
 TypeScript wiring and self-contained Bun bundle pass locally. A local smoke test
 boots the actual bundle and verifies HTTP 200 liveness, HTTP 404, and sanitized
 HTTP 503 for an unavailable fictional database. It does not connect to Prisma Cloud.

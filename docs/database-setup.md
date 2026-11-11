@@ -94,7 +94,7 @@ If selecting a repository directory, use the directory containing `package.json`
 (the root of this Git repository).
 
 Set `GRADPATH_DATABASE_URL` privately in Prisma's environment settings for
-the backend-database preview, using your existing development database URL.
+Preview scope or the backend-preview environment, using your existing development database URL.
 Prisma Cloud reserves DATABASE_URL for its own database wiring, so the Composer
 service uses a custom secret name. Local `.env` keeps DATABASE_URL and DIRECT_URL;
 DIRECT_URL is only needed for the separate migration commands.

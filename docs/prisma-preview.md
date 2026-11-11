@@ -1,8 +1,10 @@
 # Deploy the backend-database preview
 
 The existing Prisma Console project is **grad-path**. The deployment application
-uses that exact name. This configuration targets the **backend-database** preview
-environment and does not change `main`.
+uses that exact name. Code stays on the Git branch **backend-database**; the backend
+deploys to the separate Prisma environment **backend-preview**. The manually created
+database stays in the existing **backend-database** Prisma environment. This does
+not change `main` or move the database.
 
 ## Before the first push
 
@@ -12,7 +14,7 @@ environment and does not change `main`.
 2. Confirm Group-12-Project/team-project-app is connected to the **grad-path**
    Prisma project and GitHub Actions is enabled for the repository.
 3. In that project's environment settings, save a private **GRADPATH_DATABASE_URL** for
-   the **preview** scope (or the backend-database branch override), pointing at
+   the **Preview** scope (or a backend-preview environment override), pointing at
    your development Prisma Postgres database. Do not use production data.
    Composer binds this as a redacted secret input. If an environment lacks it,
    deployment fails rather than connecting to a fallback database.
@@ -35,7 +37,7 @@ npm run db:check
 application and separate deployment toolchain, generates Prisma Client, builds a
 self-contained Bun backend bundle, checks TypeScript, runs a local smoke test,
 and invokes Prisma's official deploy action. Its explicit `environment` is
-`backend-database`; it does not infer production from the default branch. It also
+`backend-preview`; it does not infer production from the default branch. It also
 refuses to run when backend-database is GitHub's default branch. Prisma must also
 have main as its default: a default-name preview may be refused by the platform.
 
@@ -84,9 +86,14 @@ Generated artifacts and both node_modules directories are ignored.
 - Cloud authentication, the existing project's deployment-state compatibility,
   hosted database connection, and the actual GitHub Actions run remain unverified
   until account configuration and publication are complete.
-- An existing project created outside Composer may report
-  `HostedStateBootstrapError`. Do not delete it or switch names to create another
-  project automatically; inspect its deployment-state setup before proceeding.
+- `HostedStateBootstrapError` occurred because backend-database already contained
+  the manually created gradpath-dev database but no Composer deployment state.
+  The installed state guard checks resources on the target Prisma branch, so the
+  backend now targets a fresh backend-preview environment in the same project.
+  Keep that target empty before its first deployment; do not manually add resources
+  there. Preserve the database environment and connect to it through the custom
+  secret. An override scoped only to backend-database does not apply to backend-preview;
+  set the secret in Preview scope or explicitly for backend-preview.
 - The new deployment toolchain currently reports 16 dependency advisories
   (8 high, 8 moderate). These concern its transitive tools; no forced downgrade or
   major dependency override was applied. Review upstream fixes before production.
@@ -95,7 +102,7 @@ Generated artifacts and both node_modules directories are ignored.
 - `envSecret name "DATABASE_URL" is reserved` means the graph tried to bind a
   Prisma Cloud-managed name as a custom secret. This deployment instead uses
   **GRADPATH_DATABASE_URL** for the existing database; save the same connection
-  string under that custom name in the backend-database preview environment.
+  string under that custom name in Preview scope or the backend-preview environment.
   Local `.env` names remain DATABASE_URL and DIRECT_URL. No new database is created.
 - A missing GRADPATH_DATABASE_URL means the preview secret has not been configured. Your
   local ignored `.env` is not uploaded. DIRECT_URL is needed for separate migration
