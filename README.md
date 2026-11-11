@@ -61,6 +61,10 @@ npm install
 
 ## Running locally
 
+For the MySQL/Prisma development database and backend health server, follow
+[database setup and team handoff](docs/database-setup.md). The frontend profile
+currently continues to use browser storage while API integration is pending.
+
 ```bash
 npm run dev
 ```
