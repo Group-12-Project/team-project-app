@@ -20,7 +20,6 @@ Thumbs.db
 *.sqlite-*
 *.sqlite3
 *.sqlite3-*
-mysql-data/
 server/generated/
 .prisma/
 

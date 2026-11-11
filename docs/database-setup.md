@@ -38,8 +38,7 @@ PORT=3001
 Keep the URLs' SSL parameters. If the Connect panel provides only a direct standard
 PostgreSQL URL, it can be used in both variables for initial development. Do not paste
 URLs into chat, issues, screenshots, or committed files. `.env.example` is the
-non-secret template. The old local configuration, if present, is preserved in ignored
-`.env.mysql.local`; it is not the active configuration.
+non-secret template. The obsolete local MySQL credential backup has been removed.
 
 ## Install, migrate, seed, and run
 
@@ -138,10 +137,13 @@ and actual handoff delivery still need to be recorded. None are claimed complete
 
 ## Legacy MySQL transition
 
-The previous local MySQL migration is archived under `prisma/legacy-mysql/` and is
-excluded from active PostgreSQL migration history. The old MySQL database/volume
-has not been deleted and its data is not imported. The original root SQL is retained
-for reference. This is a fresh PostgreSQL setup, not an in-place data migration.
+The old local MySQL container, fictional-data volume, Docker network, and image
+were removed on 2026-11-11. The obsolete `.env.mysql.local` credential backup and
+duplicate archived MySQL migration were also removed. Git history retains the old
+migration if needed. The original `gradplanner_full_database.sql` remains as the
+team's historical schema reference; it is not a PostgreSQL installation script.
+The active PostgreSQL migrations, seed, and private `.env` are preserved. This was
+a fresh PostgreSQL setup, not an in-place data migration.
 
 ## Verification and private configuration
 
@@ -149,7 +151,7 @@ Run `npm run typecheck:server`, `npm run lint`, `npm test`, `npm run build`, and
 `npx prisma validate`. See [verification status](database-verification.md).
 
 ```bash
-git check-ignore .env .env.mysql.local .env.local local.pem local.key local.db
+git check-ignore .env .env.local local.pem local.key local.db
 git ls-files '.env*' '*.pem' '*.key' '*.db' '*.sqlite*'
 git status --short
 ```
