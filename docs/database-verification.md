@@ -54,3 +54,15 @@ HTTP 503 for an unavailable fictional database. It does not connect to Prisma Cl
 Cloud deployment remains pending Console settings, project-state validation,
 preview credentials, and publication. Deployment-tool dependency advisories and
 reproduction steps are recorded in [preview setup](prisma-preview.md).
+
+## Hosted deployment evidence
+
+- Date verified: November 11, 2026
+- Git branch: backend-database
+- Prisma project: grad-path
+- Deployment environment: backend-preview
+- Commit: [commit](https://github.com/Group-12-Project/team-project-app/commit/c23b388319eb90472d2ff739a7a43e5417b4a104)
+- Successful workflow: [workflow run](https://github.com/Group-12-Project/team-project-app/actions/runs/43121955826)
+- Public backend URL: [PASTE_PUBLIC_DEPLOYMENT_URL](https://t7b1030sxavsotv2z2thyuy7.ewr.prisma.build/)
+- GET /health: {"status":"ok"}
+- GET /health/db: {"database":"connected"}
