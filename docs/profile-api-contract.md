@@ -270,8 +270,8 @@ accurately rather than inferred from that approval.
 - [x] John approves the draft or requests revisions.
 - [ ] Resolve or explicitly revise the proposed decisions in section 2 with Devin, Ian, and Nick.
 - [ ] Record agreement on the complete contract and acceptance checks.
-- [ ] Commit the reviewed document under John's GitHub identity and link its commit or PR in #43.
-- [ ] Link the reviewed contract from dependent Sprint 2 work (#44–#57) where relevant; preserve issue ownership and existing content.
+- [x] Commit the reviewed proposal under John's GitHub identity and link its commit or PR in #43: [PR #59](https://github.com/Group-12-Project/team-project-app/pull/59), initial commit `b2dea16eac3a0646762c59085b78227a4a51ede7`. Final team-agreed revisions remain pending.
+- [x] Link the proposal from the core model (#44), setup (#46), API (#49), frontend (#50), and integration-test (#57) issues; preserve issue ownership and existing content. Update these links/notes if team review revises the contract.
 - [ ] Update #43's criteria with the evidence and mark it Done/closed after its agreement and documentation requirements are satisfied.
 
 Passing implementation tests, completed backend/frontend work, and the Sprint 2
