@@ -1,19 +1,12 @@
 import 'dotenv/config'
-import { PrismaMariaDb } from '@prisma/adapter-mariadb'
+import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from './generated/prisma/client.ts'
 
-const url = new URL(process.env.DATABASE_URL ?? '')
-if (url.protocol !== 'mysql:') throw new Error('DATABASE_URL must use mysql://')
+const connectionString = process.env.DATABASE_URL
+if (!connectionString || !/^postgres(ql)?:\/\//.test(connectionString)) {
+  throw new Error('Set DATABASE_URL to the PostgreSQL connection URL from Prisma Console.')
+}
 
-const adapter = new PrismaMariaDb({
-  host: url.hostname,
-  port: Number(url.port || 3306),
-  user: decodeURIComponent(url.username),
-  password: decodeURIComponent(url.password),
-  database: decodeURIComponent(url.pathname.slice(1)),
-  connectionLimit: 5,
-  connectTimeout: 5000,
-  acquireTimeout: 10000,
-})
+const adapter = new PrismaPg({ connectionString, max: 5, connectionTimeoutMillis: 5000 })
 
 export const prisma = new PrismaClient({ adapter, errorFormat: 'minimal' })

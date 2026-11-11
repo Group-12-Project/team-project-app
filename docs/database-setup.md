@@ -1,136 +1,172 @@
-# Database decision and development handoff
+# Prisma Postgres setup and team handoff
 
-## Decision — 2026-11-11
+## Database decision — 2026-11-11
 
-Use **MySQL 8.4 LTS and Prisma ORM 7**, with one local database per developer.
-Devin confirmed Prisma in this implementation session. MySQL follows the existing
-`gradplanner_full_database.sql` design: relational tables, foreign keys, enums,
-unsigned identifiers, and check constraints. Keeping MySQL avoids a dialect migration.
-Prisma provides a shared schema, generated client, migrations, and explicit seeds.
-The MariaDB adapter supports MySQL; it does not change the chosen database engine.
+Use hosted **Prisma Postgres (PostgreSQL 17) with Prisma ORM 7**. Devin explicitly
+requested managing the database through prisma.io. This supersedes the earlier
+local MySQL proposal. Prisma Console manages the hosted database; Prisma Studio
+browses records; Prisma ORM connects backend code. The editor/GitHub extension
+does not provision a database or supply credentials.
 
-PostgreSQL would require translating the current SQL; SQLite would not reproduce its
-MySQL constraints and types. A shared development database would introduce shared
-credentials and allow teammates' test data and schema changes to interfere.
+The MySQL design is translated into PostgreSQL models and a new initial migration.
+All 24 models, relationships, enums, original business check constraints, and
+update-time triggers are retained. Unsigned fields become signed PostgreSQL numbers
+with nonnegative checks, so the positive range of BIGINT is smaller. PostgreSQL text
+comparisons are case-sensitive by default, unlike the legacy MySQL collation; agree
+on email normalization and other case-insensitive uniqueness before authentication
+implementation. Original SQL is a historical reference, not an installation script.
 
-Prisma is a server-side database access layer, not a web server. The Prisma VS Code
-extension provides editor support; installation alone does not start a database or API.
-The backend runs with `npm run server:dev`; the frontend runs with `npm run dev`.
+## Create your database in the website
 
-Team coordination record: Prisma confirmed by Devin. S2-01/S2-02 issue links, named
-reviewers, MySQL agreement, identity/authentication decisions, and profile/API contract
-sign-off still need to be recorded by the team before application integration.
-No teammate approval or message delivery is claimed here.
+1. Open https://console.prisma.io/ and sign in using your GitHub account or preferred
+   email. No account has been created on your behalf.
+2. Create a project named **GradPath**, then a **Prisma Postgres** database for
+   development. Select an appropriate region and review the displayed plan before
+   completing creation. No paid resources are required by this repository.
+3. Open the database's **Connect** panel. Select standard PostgreSQL connection
+   strings. Use the pooled URL for the application and the direct URL for migrations.
+   These start with `postgres://` or `postgresql://`; this project does not use a
+   `prisma+postgres://` Accelerate URL.
+4. In VS Code, open the repository's private `.env` file. Replace its placeholders:
 
-## Reproduce the environment (John's setup steps)
+```dotenv
+DATABASE_URL="PASTE_YOUR_POOLED_POSTGRESQL_URL_HERE"
+DIRECT_URL="PASTE_YOUR_DIRECT_POSTGRESQL_URL_HERE"
+PORT=3001
+```
 
-Prerequisites: Node meeting `package.json` engines, npm, and running Docker Desktop.
-Run from the repository root:
+Keep the URLs' SSL parameters. If the Connect panel provides only a direct standard
+PostgreSQL URL, it can be used in both variables for initial development. Do not paste
+URLs into chat, issues, screenshots, or committed files. `.env.example` is the
+non-secret template. The old local configuration, if present, is preserved in ignored
+`.env.mysql.local`; it is not the active configuration.
+
+## Install, migrate, seed, and run
+
+Prerequisites: Node meeting `package.json` engines, npm, internet access to the
+hosted database. Docker is no longer required for the application.
+Run in the `team-project-app` folder. For a fresh checkout, run `cp .env.example .env`
+before filling in the URLs. Do not overwrite an already configured `.env`.
 
 ```bash
 npm ci
-cp .env.example .env
-```
-
-Edit the private `.env`: replace both password placeholders with different local
-passwords. Match `MYSQL_PASSWORD` to the password in `DATABASE_URL`; URL-encode special
-characters in the URL. Keep database/user/port values consistent. Port 3307 avoids
-the common locally installed MySQL port 3306. Nothing should use a real student record.
-Do not prefix database variables with `VITE_`, which exposes them to browser code.
-
-```bash
-npm run db:up
-npm run db:migrate
 npm run db:generate
+npm run db:migrate
 npm run db:seed
 npm run db:check
 npm run server:dev
 ```
 
-In another terminal:
+`db:migrate` creates the schema in a **new, empty development PostgreSQL database**.
+Do not point it at a production database, the old MySQL database, or an existing
+populated PostgreSQL database without a reviewed baseline. Migrations and seed
+create fictional data, not student records.
+
+In another terminal, verify the server:
 
 ```bash
 curl --fail http://127.0.0.1:3001/health/db
 npm run dev
 ```
 
-Expected health response: `{"database":"connected"}`. On failure the endpoint
-returns HTTP 503 and `{"database":"unavailable"}` without credentials or driver errors.
-`db:check` queries MySQL through Prisma and verifies the fictional seeded profile
-and its two interests. `db:studio` opens Prisma Studio for local data inspection.
-The health server binds only to loopback and is a development integration foundation.
-The frontend still uses `localStorage`; profile API wiring is John's follow-up.
+Expected response: `{"database":"connected"}`. `db:check` must confirm that Prisma
+can read the fictional profile and its two interests. The backend runs on port 3001
+by default and binds to `0.0.0.0` so hosting can reach it. Set `HOST=127.0.0.1`
+for loopback-only local access. Vite runs the frontend separately. The frontend still uses
+browser storage pending John's profile API integration.
 
-Validate code with `npm run typecheck:server`, `npm run lint`, `npm test`, and
-`npm run build`. The TypeScript check covers the database module, seed, verification
-script, configuration, and backend server.
+## Host the backend with Prisma Compute
 
-Use `npm run db:down` to stop the database without deleting its volume. Restart with
-`db:up`. Existing volumes retain their original MySQL passwords: changing `.env`
-does not change a database account password. Coordinate a local password change or
-explicitly recreate a disposable volume; do not delete another developer's database.
-Changing Git branches also does not rewind a database volume.
+The package names its backend entry point with `"start": "bun server/index.ts"`.
+Prisma Compute supplies the Bun runtime; local Node development can continue with
+`npm run server:dev`. The existing Node HTTP server is compatible with Bun.
+`npm run build` first generates Prisma Client, then builds the frontend. Generation
+does not require database credentials; migrations require `DIRECT_URL`, and the
+running backend requires `DATABASE_URL`.
 
-## Collaboration and migrations (Ian's handoff)
+Commit the PostgreSQL transition and hosting changes and push them to the branch
+selected in Prisma's connected repository settings, then retry deployment. A local
+file change alone is not visible to Prisma. Publication has not been performed here.
+If selecting a repository directory, use the directory containing `package.json`
+(the root of this Git repository).
 
-- Commit schema, migration directories, migration lock, seed code, and npm lockfile.
-- Each teammate applies the same committed migrations with `npm run db:migrate`.
-- The initial migration preserves every table and SQL constraint from the existing
-  SQL file, excluding database creation/selection. Do not separately import that SQL
-  into a Prisma-managed database. Existing populated databases need a reviewed baseline.
-- `prisma/schema.prisma` was introspected from the initial migration. SQL check
-  constraints and database comments may not be fully expressible in Prisma; preserve
-  and review the migration SQL when making changes.
-- For subsequent migrations, edit the schema and use
-  `npm run db:migrate:dev -- --name describe_change`. MySQL's application user has
-  access only to its development database. `migrate dev` also needs a separate local
-  shadow database and a suitable migration account; configure `shadowDatabaseUrl`
-  in `prisma.config.ts` before using it. Never use the actual database as the shadow.
-  `migrate deploy` for onboarding does not require a shadow database.
-- Review migration SQL in a PR; never edit an already applied migration or use
-  `db push` as a substitute for committed migration history.
-- Seed uses reserved fictional user ID `900001` and `example.invalid` email, with
-  no password or authentication identity. Re-running it does not duplicate records
-  or erase other developers' fixtures. It does not reset edited profile values.
-- Ian owns subsequent migrations/seeds. John owns API routing, authorization,
-  validation, async frontend integration, and shared team setup documentation.
-- Reuse `server/db.ts` in backend modules. Convert MySQL `BigInt` IDs to strings
-  before JSON serialization and Prisma decimals to appropriate DTO values. Final
-  profile field mappings and endpoint contracts require S2-01/S2-02 coordination.
+Set `DATABASE_URL` and `DIRECT_URL` privately in Prisma's environment settings for
+the appropriate preview/production scope. Your local `.env` is ignored by Git and
+is not uploaded. Use a development database for previews. Allow the platform to set
+`PORT` if it provides one. `/health` returns server liveness; `/health/db` checks the
+database connection. Run migrations/seeds separately against the intended database;
+this start command does not perform them. This entry point serves the backend
+health endpoints; serving the React frontend and wiring its API are separate work.
 
-## Private configuration verification
+Reference: https://www.prisma.io/docs/compute/environment-variables
 
-`.env.example` contains placeholders only. Actual `.env`, environment variants,
-private-key files, local SQLite files, generated Prisma client, and local MySQL
-data directories are ignored. Docker stores MySQL files in a named volume outside
-the repository. The implementation session generated local-only random passwords
-in an untracked `.env`; these values must never be copied into evidence.
+## Browse records
+
+Return to the same project/database in Prisma Console and open its Studio/data
+browser. After seeding, browse `users`, `student_profiles`, and `profile_interests`.
+The fixture is **Demo Student**, ID **900001**, email
+**demo.student@example.invalid**, with no login password. This fictional email
+is unrelated to the real account email you use to sign into Prisma Console.
+You can also open a local Studio interface using `npm run db:studio`.
+
+## Team collaboration and dependencies
+
+The proposed collaboration approach is one designated **shared hosted development
+database**, with version-controlled migrations and idempotent fictional seeds.
+Devin owns the database project and grants teammates access through Prisma Console
+workspace/project invitations supported by the chosen plan. Share credentials only
+through the team's private secret-sharing channel; never commit them.
+
+Ian owns future migrations/seeds. Coordinate shared-schema changes: one migration
+owner at a time, review SQL in a PR, and apply committed migrations with
+`npm run db:migrate`. Do not rewrite migrations already applied to PostgreSQL.
+Use a separate disposable development database for authoring migrations with
+`npm run db:migrate:dev -- --name describe_change`; provision a separate shadow
+database if Prisma cannot create one automatically. Do not reset the shared database
+or use it as a shadow database. Seed may be repeated without duplicate fixture rows;
+it does not reset edited fixture values or erase teammates' data.
+
+John owns API routing, authorization, validation, frontend wiring, and team setup
+documentation. Reuse `server/db.ts` only on the backend. Serialize BigInt IDs as strings
+and convert decimals to agreed DTO types. Never use `VITE_` for database secrets.
+S2-01/S2-02 identity and profile/API contract agreement, named teammate sign-offs,
+and actual handoff delivery still need to be recorded. None are claimed complete.
+
+## Legacy MySQL transition
+
+The previous local MySQL migration is archived under `prisma/legacy-mysql/` and is
+excluded from active PostgreSQL migration history. The old MySQL database/volume
+has not been deleted and its data is not imported. The original root SQL is retained
+for reference. This is a fresh PostgreSQL setup, not an in-place data migration.
+
+## Verification and private configuration
+
+Run `npm run typecheck:server`, `npm run lint`, `npm test`, `npm run build`, and
+`npx prisma validate`. See [verification status](database-verification.md).
 
 ```bash
-git check-ignore .env .env.local .env.production local.pem local.key local.db local.sqlite3
+git check-ignore .env .env.mysql.local .env.local local.pem local.key local.db
 git ls-files '.env*' '*.pem' '*.key' '*.db' '*.sqlite*'
 git status --short
 ```
 
-Expected: the first command lists ignored paths; the second lists only `.env.example`
-after it is committed. Review staged diffs before committing. Ignore rules do not
-remove files already tracked or erase historical exposures. No real environment,
-key, or local database file was tracked when this work began.
+Only `.env.example` should be tracked among those patterns. Generated Prisma client,
+private keys, local databases, and actual environment files are ignored. Review
+staged diffs before committing; ignore rules do not erase past credential exposures.
 
 ## Completion evidence
 
 Related backlog: [#26](https://github.com/Group-12-Project/team-project-app/issues/26),
 [#5](https://github.com/Group-12-Project/team-project-app/issues/5).
 
-Configuration: [`../.env.example`](../.env.example), [`../.gitignore`](../.gitignore),
-[`../compose.yaml`](../compose.yaml), [`../prisma.config.ts`](../prisma.config.ts),
-[`../prisma/schema.prisma`](../prisma/schema.prisma),
-[`../prisma/migrations`](../prisma/migrations), [`../prisma/seed.ts`](../prisma/seed.ts).
+Non-secret configuration: [environment template](../.env.example),
+[ignore rules](../.gitignore), [Prisma config](../prisma.config.ts),
+[models](../prisma/schema.prisma), [migrations](../prisma/migrations),
+[fictional seed](../prisma/seed.ts), [connection check](../scripts/check-db.ts).
 
-Connection evidence and checks: [database verification](database-verification.md).
-Commit/PR link: pending team review and publication. Current working branch:
-`backend-database`. Add the actual commit/PR URL after publication; do not mark the
-entire task complete until coordination and handoff are recorded.
+The earlier local MySQL setup was committed as `2c9a5f5` and was not pushed because
+publication was declined. The PostgreSQL transition is a subsequent local change;
+its commit/PR URL and hosted connection evidence remain pending. Do not use the
+old MySQL connection check as proof of a hosted Prisma Postgres connection.
 
-References: [Prisma MySQL support and adapter](https://www.prisma.io/docs/orm/v7/core-concepts/supported-databases/mysql),
-[Prisma client generation](https://www.prisma.io/docs/orm/v7/prisma-schema/overview/generators).
+Official guide: https://www.prisma.io/docs/postgres

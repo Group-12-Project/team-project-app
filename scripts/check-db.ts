@@ -9,7 +9,7 @@ try {
   if (profile?.preferred_name !== 'Demo Student' || profile.profile_interests.length !== 2) {
     throw new Error('Seed verification failed')
   }
-  console.log('PASS: Prisma connected to MySQL; fictional profile and two interests verified.')
+  console.log('PASS: Prisma connected to PostgreSQL; fictional profile and two interests verified.')
 } catch {
   console.error('FAIL: Database verification failed. Check database health, .env, migrations, and seeds.')
   process.exitCode = 1

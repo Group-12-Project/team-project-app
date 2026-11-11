@@ -5,44 +5,43 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
 }
 
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model admin_audit_events {
-  event_id       BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
-  admin_user_id  BigInt   @db.UnsignedBigInt
+  event_id       BigInt   @id @default(autoincrement())
+  admin_user_id  BigInt
   action_name    String   @db.VarChar(120)
   entity_type    String   @db.VarChar(80)
-  entity_id      BigInt?  @db.UnsignedBigInt
+  entity_id      BigInt?
   action_details String?  @db.Text
-  event_at       DateTime @default(now()) @db.DateTime(0)
+  event_at       DateTime @default(now()) @db.Timestamp(0)
   users          users    @relation(fields: [admin_user_id], references: [id], onUpdate: NoAction, map: "fk_admin_audit_events_admin")
 
-  @@index([admin_user_id], map: "fk_admin_audit_events_admin")
+  @@index([admin_user_id], map: "ix_admin_audit_events_admin")
 }
 
 model career_opportunities {
-  opportunity_id     BigInt                                  @id @default(autoincrement()) @db.UnsignedBigInt
+  opportunity_id     BigInt                                  @id @default(autoincrement())
   category           career_opportunities_category
   title              String                                  @db.VarChar(200)
   summary            String?                                 @db.Text
   why_it_helps       String?                                 @db.Text
   next_action        String?                                 @db.VarChar(255)
-  related_course_id  BigInt?                                 @db.UnsignedBigInt
-  related_skill_id   BigInt?                                 @db.UnsignedBigInt
+  related_course_id  BigInt?
+  related_skill_id   BigInt?
   publication_status career_opportunities_publication_status @default(draft)
   courses            courses?                                @relation(fields: [related_course_id], references: [course_id], onUpdate: NoAction, map: "fk_career_opportunities_course")
   skills             skills?                                 @relation(fields: [related_skill_id], references: [skill_id], onUpdate: NoAction, map: "fk_career_opportunities_skill")
   saved_steps        saved_steps[]
 
-  @@index([related_course_id], map: "fk_career_opportunities_course")
-  @@index([related_skill_id], map: "fk_career_opportunities_skill")
+  @@index([related_course_id], map: "ix_career_opportunities_course")
+  @@index([related_skill_id], map: "ix_career_opportunities_skill")
 }
 
 model concentrations {
-  concentration_id   BigInt             @id @default(autoincrement()) @db.UnsignedBigInt
-  program_id         BigInt             @db.UnsignedBigInt
+  concentration_id   BigInt             @id @default(autoincrement())
+  program_id         BigInt
   concentration_name String             @db.VarChar(160)
   programs           programs           @relation(fields: [program_id], references: [program_id], onUpdate: NoAction, map: "fk_concentrations_program")
   student_profiles   student_profiles[]
@@ -50,12 +49,11 @@ model concentrations {
   @@unique([program_id, concentration_name], map: "uq_concentration_program_name")
 }
 
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model course_history {
-  history_id            BigInt                           @id @default(autoincrement()) @db.UnsignedBigInt
-  student_user_id       BigInt                           @db.UnsignedBigInt
-  course_id             BigInt?                          @db.UnsignedBigInt
-  term_id               BigInt?                          @db.UnsignedBigInt
+  history_id            BigInt                           @id @default(autoincrement())
+  student_user_id       BigInt
+  course_id             BigInt?
+  term_id               BigInt?
   course_code_snapshot  String?                          @db.VarChar(30)
   course_title_snapshot String?                          @db.VarChar(200)
   completion_status     course_history_completion_status
@@ -65,15 +63,15 @@ model course_history {
   student_profiles      student_profiles                 @relation(fields: [student_user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_course_history_student")
   terms                 terms?                           @relation(fields: [term_id], references: [term_id], onUpdate: NoAction, map: "fk_course_history_term")
 
-  @@index([course_id], map: "fk_course_history_course")
-  @@index([student_user_id], map: "fk_course_history_student")
-  @@index([term_id], map: "fk_course_history_term")
+  @@index([course_id], map: "ix_course_history_course")
+  @@index([student_user_id], map: "ix_course_history_student")
+  @@index([term_id], map: "ix_course_history_term")
 }
 
 model course_offerings {
-  offering_id     BigInt                         @id @default(autoincrement()) @db.UnsignedBigInt
-  course_id       BigInt                         @db.UnsignedBigInt
-  term_id         BigInt                         @db.UnsignedBigInt
+  offering_id     BigInt                         @id @default(autoincrement())
+  course_id       BigInt
+  term_id         BigInt
   section         String                         @db.VarChar(30)
   delivery_mode   course_offerings_delivery_mode @default(in_person)
   courses         courses                        @relation(fields: [course_id], references: [course_id], onUpdate: NoAction, map: "fk_course_offerings_course")
@@ -82,50 +80,48 @@ model course_offerings {
   planned_courses planned_courses[]
 
   @@unique([course_id, term_id, section], map: "uq_offering_section")
-  @@index([term_id], map: "fk_course_offerings_term")
+  @@index([term_id], map: "ix_course_offerings_term")
 }
 
 model course_prerequisites {
-  course_id                                                    BigInt  @db.UnsignedBigInt
-  prerequisite_course_id                                       BigInt  @db.UnsignedBigInt
+  course_id                                                    BigInt
+  prerequisite_course_id                                       BigInt
   courses_course_prerequisites_course_idTocourses              courses @relation("course_prerequisites_course_idTocourses", fields: [course_id], references: [course_id], onUpdate: NoAction, map: "fk_course_prerequisites_course")
   courses_course_prerequisites_prerequisite_course_idTocourses courses @relation("course_prerequisites_prerequisite_course_idTocourses", fields: [prerequisite_course_id], references: [course_id], onUpdate: NoAction, map: "fk_course_prerequisites_required")
 
   @@id([course_id, prerequisite_course_id])
-  @@index([prerequisite_course_id], map: "fk_course_prerequisites_required")
+  @@index([prerequisite_course_id], map: "ix_course_prerequisites_required")
 }
 
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model course_reviews {
-  review_id         BigInt                           @id @default(autoincrement()) @db.UnsignedBigInt
-  course_id         BigInt                           @db.UnsignedBigInt
-  student_user_id   BigInt                           @db.UnsignedBigInt
-  rating            Int                              @db.UnsignedTinyInt
+  review_id         BigInt                           @id @default(autoincrement())
+  course_id         BigInt
+  student_user_id   BigInt
+  rating            Int
   review_text       String?                          @db.Text
   moderation_status course_reviews_moderation_status @default(pending)
-  created_at        DateTime                         @default(now()) @db.DateTime(0)
-  updated_at        DateTime                         @default(now()) @db.DateTime(0)
+  created_at        DateTime                         @default(now()) @db.Timestamp(0)
+  updated_at        DateTime                         @default(now()) @updatedAt @db.Timestamp(0)
   courses           courses                          @relation(fields: [course_id], references: [course_id], onUpdate: NoAction, map: "fk_course_reviews_course")
   student_profiles  student_profiles                 @relation(fields: [student_user_id], references: [user_id], onUpdate: NoAction, map: "fk_course_reviews_student")
   review_flags      review_flags[]
 
-  @@index([course_id], map: "fk_course_reviews_course")
-  @@index([student_user_id], map: "fk_course_reviews_student")
+  @@index([course_id], map: "ix_course_reviews_course")
+  @@index([student_user_id], map: "ix_course_reviews_student")
 }
 
 model course_skills {
-  course_id BigInt  @db.UnsignedBigInt
-  skill_id  BigInt  @db.UnsignedBigInt
+  course_id BigInt
+  skill_id  BigInt
   courses   courses @relation(fields: [course_id], references: [course_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_course_skills_course")
   skills    skills  @relation(fields: [skill_id], references: [skill_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_course_skills_skill")
 
   @@id([course_id, skill_id])
-  @@index([skill_id], map: "fk_course_skills_skill")
+  @@index([skill_id], map: "ix_course_skills_skill")
 }
 
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model courses {
-  course_id                                                                 BigInt                     @id @default(autoincrement()) @db.UnsignedBigInt
+  course_id                                                                 BigInt                     @id @default(autoincrement())
   course_code                                                               String?                    @unique(map: "course_code") @db.VarChar(30)
   title                                                                     String                     @db.VarChar(200)
   credits                                                                   Decimal                    @db.Decimal(4, 1)
@@ -143,63 +139,61 @@ model courses {
 }
 
 model interview_progress {
-  student_user_id     BigInt                    @db.UnsignedBigInt
-  question_id         BigInt                    @db.UnsignedBigInt
+  student_user_id     BigInt
+  question_id         BigInt
   status              interview_progress_status @default(not_started)
-  practiced_at        DateTime?                 @db.DateTime(0)
-  completed_at        DateTime?                 @db.DateTime(0)
+  practiced_at        DateTime?                 @db.Timestamp(0)
+  completed_at        DateTime?                 @db.Timestamp(0)
   interview_questions interview_questions       @relation(fields: [question_id], references: [question_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_interview_progress_question")
   student_profiles    student_profiles          @relation(fields: [student_user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_interview_progress_student")
 
   @@id([student_user_id, question_id])
-  @@index([question_id], map: "fk_interview_progress_question")
+  @@index([question_id], map: "ix_interview_progress_question")
 }
 
 model interview_questions {
-  question_id        BigInt                       @id @default(autoincrement()) @db.UnsignedBigInt
+  question_id        BigInt                       @id @default(autoincrement())
   category           interview_questions_category
   prompt             String                       @db.Text
   guidance           String?                      @db.Text
-  display_order      Int                          @default(0) @db.UnsignedInt
+  display_order      Int                          @default(0)
   interview_progress interview_progress[]
 }
 
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model meeting_times {
-  meeting_time_id  BigInt           @id @default(autoincrement()) @db.UnsignedBigInt
-  offering_id      BigInt           @db.UnsignedBigInt
-  weekday          Int              @db.UnsignedTinyInt
+  meeting_time_id  BigInt           @id @default(autoincrement())
+  offering_id      BigInt
+  weekday          Int
   start_time       DateTime         @db.Time(0)
   end_time         DateTime         @db.Time(0)
   course_offerings course_offerings @relation(fields: [offering_id], references: [offering_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_meeting_times_offering")
 
-  @@index([offering_id], map: "fk_meeting_times_offering")
+  @@index([offering_id], map: "ix_meeting_times_offering")
 }
 
 model planned_courses {
-  plan_id          BigInt           @db.UnsignedBigInt
-  offering_id      BigInt           @db.UnsignedBigInt
-  added_at         DateTime         @default(now()) @db.DateTime(0)
+  plan_id          BigInt
+  offering_id      BigInt
+  added_at         DateTime         @default(now()) @db.Timestamp(0)
   course_offerings course_offerings @relation(fields: [offering_id], references: [offering_id], onUpdate: NoAction, map: "fk_planned_courses_offering")
   semester_plans   semester_plans   @relation(fields: [plan_id], references: [plan_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_planned_courses_plan")
 
   @@id([plan_id, offering_id])
-  @@index([offering_id], map: "fk_planned_courses_offering")
+  @@index([offering_id], map: "ix_planned_courses_offering")
 }
 
 model profile_interests {
-  interest_id      BigInt           @id @default(autoincrement()) @db.UnsignedBigInt
-  student_user_id  BigInt           @db.UnsignedBigInt
+  interest_id      BigInt           @id @default(autoincrement())
+  student_user_id  BigInt
   interest_name    String           @db.VarChar(120)
-  display_order    Int              @default(0) @db.UnsignedSmallInt
+  display_order    Int              @default(0)
   student_profiles student_profiles @relation(fields: [student_user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_profile_interests_student")
 
   @@unique([student_user_id, interest_name], map: "uq_student_interest")
 }
 
 model profile_preferences {
-  user_id              BigInt           @id @db.UnsignedBigInt
+  user_id              BigInt           @id
   preferred_start_time DateTime?        @db.Time(0)
   preferred_end_time   DateTime?        @db.Time(0)
   schedule_notes       String?          @db.VarChar(255)
@@ -208,18 +202,18 @@ model profile_preferences {
 }
 
 model program_courses {
-  program_id       BigInt                           @db.UnsignedBigInt
-  course_id        BigInt                           @db.UnsignedBigInt
+  program_id       BigInt
+  course_id        BigInt
   requirement_type program_courses_requirement_type @default(required)
   courses          courses                          @relation(fields: [course_id], references: [course_id], onUpdate: NoAction, map: "fk_program_courses_course")
   programs         programs                         @relation(fields: [program_id], references: [program_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_program_courses_program")
 
   @@id([program_id, course_id])
-  @@index([course_id], map: "fk_program_courses_course")
+  @@index([course_id], map: "ix_program_courses_course")
 }
 
 model programs {
-  program_id         BigInt                      @id @default(autoincrement()) @db.UnsignedBigInt
+  program_id         BigInt                      @id @default(autoincrement())
   program_name       String                      @db.VarChar(160)
   degree_level       programs_degree_level
   description        String?                     @db.Text
@@ -233,64 +227,63 @@ model programs {
 }
 
 model review_flags {
-  flag_id                                       BigInt              @id @default(autoincrement()) @db.UnsignedBigInt
-  review_id                                     BigInt              @db.UnsignedBigInt
-  reported_by_user_id                           BigInt?             @db.UnsignedBigInt
+  flag_id                                       BigInt              @id @default(autoincrement())
+  review_id                                     BigInt
+  reported_by_user_id                           BigInt?
   reason                                        String              @db.VarChar(255)
   status                                        review_flags_status @default(open)
-  reviewer_user_id                              BigInt?             @db.UnsignedBigInt
-  created_at                                    DateTime            @default(now()) @db.DateTime(0)
-  decision_at                                   DateTime?           @db.DateTime(0)
+  reviewer_user_id                              BigInt?
+  created_at                                    DateTime            @default(now()) @db.Timestamp(0)
+  decision_at                                   DateTime?           @db.Timestamp(0)
   users_review_flags_reported_by_user_idTousers users?              @relation("review_flags_reported_by_user_idTousers", fields: [reported_by_user_id], references: [id], onUpdate: NoAction, map: "fk_review_flags_reporter")
   course_reviews                                course_reviews      @relation(fields: [review_id], references: [review_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_review_flags_review")
   users_review_flags_reviewer_user_idTousers    users?              @relation("review_flags_reviewer_user_idTousers", fields: [reviewer_user_id], references: [id], onUpdate: NoAction, map: "fk_review_flags_reviewer")
 
-  @@index([reported_by_user_id], map: "fk_review_flags_reporter")
-  @@index([review_id], map: "fk_review_flags_review")
-  @@index([reviewer_user_id], map: "fk_review_flags_reviewer")
+  @@index([reported_by_user_id], map: "ix_review_flags_reporter")
+  @@index([review_id], map: "ix_review_flags_review")
+  @@index([reviewer_user_id], map: "ix_review_flags_reviewer")
 }
 
 model saved_steps {
-  student_user_id      BigInt               @db.UnsignedBigInt
-  opportunity_id       BigInt               @db.UnsignedBigInt
-  saved_at             DateTime             @default(now()) @db.DateTime(0)
+  student_user_id      BigInt
+  opportunity_id       BigInt
+  saved_at             DateTime             @default(now()) @db.Timestamp(0)
   is_completed         Boolean              @default(false)
-  completed_at         DateTime?            @db.DateTime(0)
+  completed_at         DateTime?            @db.Timestamp(0)
   career_opportunities career_opportunities @relation(fields: [opportunity_id], references: [opportunity_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_saved_steps_opportunity")
   student_profiles     student_profiles     @relation(fields: [student_user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_saved_steps_student")
 
   @@id([student_user_id, opportunity_id])
-  @@index([opportunity_id], map: "fk_saved_steps_opportunity")
+  @@index([opportunity_id], map: "ix_saved_steps_opportunity")
 }
 
 model semester_plans {
-  plan_id          BigInt            @id @default(autoincrement()) @db.UnsignedBigInt
-  student_user_id  BigInt            @db.UnsignedBigInt
-  term_id          BigInt            @db.UnsignedBigInt
+  plan_id          BigInt            @id @default(autoincrement())
+  student_user_id  BigInt
+  term_id          BigInt
   plan_name        String            @default("My Schedule") @db.VarChar(120)
-  created_at       DateTime          @default(now()) @db.DateTime(0)
-  updated_at       DateTime          @default(now()) @db.DateTime(0)
+  created_at       DateTime          @default(now()) @db.Timestamp(0)
+  updated_at       DateTime          @default(now()) @updatedAt @db.Timestamp(0)
   planned_courses  planned_courses[]
   student_profiles student_profiles  @relation(fields: [student_user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_semester_plans_student")
   terms            terms             @relation(fields: [term_id], references: [term_id], onUpdate: NoAction, map: "fk_semester_plans_term")
 
-  @@index([student_user_id], map: "fk_semester_plans_student")
-  @@index([term_id], map: "fk_semester_plans_term")
+  @@index([student_user_id], map: "ix_semester_plans_student")
+  @@index([term_id], map: "ix_semester_plans_term")
 }
 
 model skills {
-  skill_id             BigInt                 @id @default(autoincrement()) @db.UnsignedBigInt
+  skill_id             BigInt                 @id @default(autoincrement())
   skill_name           String                 @unique(map: "skill_name") @db.VarChar(120)
   career_opportunities career_opportunities[]
   course_skills        course_skills[]
 }
 
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model student_profiles {
-  user_id                    BigInt               @id @db.UnsignedBigInt
+  user_id                    BigInt               @id
   preferred_name             String?              @db.VarChar(100)
-  program_id                 BigInt?              @db.UnsignedBigInt
-  concentration_id           BigInt?              @db.UnsignedBigInt
+  program_id                 BigInt?
+  concentration_id           BigInt?
   student_status             String?              @db.VarChar(50)
   academic_year              String?              @db.VarChar(40)
   expected_graduation        DateTime?            @db.Date
@@ -309,15 +302,14 @@ model student_profiles {
   programs                   programs?            @relation(fields: [program_id], references: [program_id], onDelete: Restrict, onUpdate: NoAction, map: "fk_student_profiles_program")
   users                      users                @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_student_profiles_user")
 
-  @@index([concentration_id], map: "fk_student_profiles_concentration")
-  @@index([program_id], map: "fk_student_profiles_program")
+  @@index([concentration_id], map: "ix_student_profiles_concentration")
+  @@index([program_id], map: "ix_student_profiles_program")
 }
 
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model terms {
-  term_id          BigInt             @id @default(autoincrement()) @db.UnsignedBigInt
+  term_id          BigInt             @id @default(autoincrement())
   term_name        String             @db.VarChar(40)
-  academic_year    Int                @db.UnsignedSmallInt
+  academic_year    Int
   start_date       DateTime?          @db.Date
   end_date         DateTime?          @db.Date
   course_history   course_history[]
@@ -327,9 +319,8 @@ model terms {
   @@unique([term_name, academic_year], map: "uq_term_name_year")
 }
 
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model users {
-  id                                                   BigInt               @id @default(autoincrement()) @db.UnsignedBigInt
+  id                                                   BigInt               @id @default(autoincrement())
   full_name                                            String               @db.VarChar(150)
   university_email                                     String               @unique(map: "university_email") @db.VarChar(255)
   password_hash                                        String?              @db.VarChar(255)
@@ -337,8 +328,8 @@ model users {
   provider_subject                                     String?              @db.VarChar(255)
   role                                                 users_role
   account_status                                       users_account_status @default(pending)
-  created_at                                           DateTime             @default(now()) @db.DateTime(0)
-  updated_at                                           DateTime             @default(now()) @db.DateTime(0)
+  created_at                                           DateTime             @default(now()) @db.Timestamp(0)
+  updated_at                                           DateTime             @default(now()) @updatedAt @db.Timestamp(0)
   admin_audit_events                                   admin_audit_events[]
   review_flags_review_flags_reported_by_user_idTousers review_flags[]       @relation("review_flags_reported_by_user_idTousers")
   review_flags_review_flags_reviewer_user_idTousers    review_flags[]       @relation("review_flags_reviewer_user_idTousers")

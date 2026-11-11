@@ -4,6 +4,10 @@ import { prisma } from './db.ts'
 const server = createServer(async (request, response) => {
   response.setHeader('Content-Type', 'application/json')
   response.setHeader('Cache-Control', 'no-store')
+  if (request.method === 'GET' && request.url === '/health') {
+    response.writeHead(200).end(JSON.stringify({ status: 'ok' }))
+    return
+  }
   if (request.method !== 'GET' || request.url !== '/health/db') {
     response.writeHead(404).end(JSON.stringify({ error: 'Not found' }))
     return
@@ -16,8 +20,8 @@ const server = createServer(async (request, response) => {
   }
 })
 
-server.listen(Number(process.env.PORT || 3001), '127.0.0.1', () => {
-  console.log('Development backend ready; GET /health/db verifies database access.')
+server.listen(Number(process.env.PORT || 3001), process.env.HOST || '0.0.0.0', () => {
+  console.log('Backend ready; GET /health checks the server and /health/db checks database access.')
 })
 
 for (const signal of ['SIGINT', 'SIGTERM'] as const) {

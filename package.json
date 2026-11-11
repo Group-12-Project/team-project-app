@@ -4,14 +4,14 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
+    "start": "bun server/index.ts",
     "dev": "vite",
+    "prebuild": "prisma generate",
     "build": "vite build",
     "lint": "eslint . --max-warnings=0",
     "test": "vitest run",
     "test:watch": "vitest",
     "preview": "vite preview",
-    "db:up": "docker compose up -d --wait",
-    "db:down": "docker compose down",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate deploy",
     "db:migrate:dev": "prisma migrate dev",
@@ -25,9 +25,10 @@
     "node": ">=22.12.0"
   },
   "dependencies": {
-    "@prisma/adapter-mariadb": "^7.10.1",
+    "@prisma/adapter-pg": "^7.10.1",
     "@prisma/client": "^7.10.1",
     "dotenv": "^18.0.10",
+    "pg": "^8.23.1",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"
   },
