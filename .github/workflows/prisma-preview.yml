@@ -39,7 +39,7 @@ jobs:
         with:
           working-directory: deploy
           install-command: npm ci
-          build-command: npm run build && npm run typecheck && npm run smoke
+          build-command: npm run check:config && npm run build && npm run typecheck && npm run smoke
           stage: backend-database
       - name: Require an actual deployment
         if: steps.deploy.outputs.outcome != 'succeeded'

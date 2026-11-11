@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "check:config": "node check-config.mjs",
     "build": "npm --prefix .. run db:generate && bun build server.ts --target=bun --outfile=dist/server.mjs",
     "typecheck": "tsc --noEmit",
     "preview": "prisma deploy --environment backend-database",

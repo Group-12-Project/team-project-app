@@ -55,6 +55,7 @@ health service, not a hosted React interface or completed profile API.
 ```bash
 npm ci
 npm --prefix deploy ci
+npm --prefix deploy run check:config
 npm --prefix deploy run build
 npm --prefix deploy run typecheck
 npm --prefix deploy run smoke
@@ -73,6 +74,12 @@ The root stays on Prisma ORM 7.10.1. `deploy/` pins the independent platform CLI
 Generated artifacts and both node_modules directories are ignored.
 
 ## Remaining limitations and troubleshooting
+
+- `CLI.CONFIG_MISSING_MARKER` naming the repository root means the deployment CLI
+  tried to inherit the Prisma ORM 7 configuration. `deploy/prisma.config.ts` sets
+  `parent: false` to stop config discovery at the deployment directory. The
+  workflow runs `check:config` using the deployment CLI loader to verify this
+  isolation before building. Keep the root ORM configuration on Prisma 7.
 
 - Cloud authentication, the existing project's deployment-state compatibility,
   hosted database connection, and the actual GitHub Actions run remain unverified
