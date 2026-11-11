@@ -93,8 +93,12 @@ file change alone is not visible to Prisma. Publication has not been performed h
 If selecting a repository directory, use the directory containing `package.json`
 (the root of this Git repository).
 
-Set `DATABASE_URL` and `DIRECT_URL` privately in Prisma's environment settings for
-the appropriate preview/production scope. Your local `.env` is ignored by Git and
+Set `GRADPATH_DATABASE_URL` privately in Prisma's environment settings for
+the backend-database preview, using your existing development database URL.
+Prisma Cloud reserves DATABASE_URL for its own database wiring, so the Composer
+service uses a custom secret name. Local `.env` keeps DATABASE_URL and DIRECT_URL;
+DIRECT_URL is only needed for the separate migration commands.
+Your local `.env` is ignored by Git and
 is not uploaded. Use a development database for previews. Allow the platform to set
 `PORT` if it provides one. `/health` returns server liveness; `/health/db` checks the
 database connection. Run migrations/seeds separately against the intended database;

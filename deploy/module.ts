@@ -4,7 +4,7 @@ import service from './service.ts'
 
 export default appRoot('grad-path', ({ provision }) => {
   const api = provision(service, {
-    input: { databaseUrl: envSecret('DATABASE_URL') },
+    input: { databaseUrl: envSecret('GRADPATH_DATABASE_URL') },
   })
   provision(publicUrl({ id: 'endpoint', url: publicUrl.prismaBuild(), target: api.http }))
 })

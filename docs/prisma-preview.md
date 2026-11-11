@@ -11,7 +11,7 @@ environment and does not change `main`.
    **backend-database**. Changing the default does not merge code.
 2. Confirm Group-12-Project/team-project-app is connected to the **grad-path**
    Prisma project and GitHub Actions is enabled for the repository.
-3. In that project's environment settings, save a private **DATABASE_URL** for
+3. In that project's environment settings, save a private **GRADPATH_DATABASE_URL** for
    the **preview** scope (or the backend-database branch override), pointing at
    your development Prisma Postgres database. Do not use production data.
    Composer binds this as a redacted secret input. If an environment lacks it,
@@ -34,7 +34,7 @@ npm run db:check
 [prisma-preview.yml](../.github/workflows/prisma-preview.yml) installs the root
 application and separate deployment toolchain, generates Prisma Client, builds a
 self-contained Bun backend bundle, checks TypeScript, runs a local smoke test,
-and invokes Prisma's official deploy action. Its explicit `stage` is
+and invokes Prisma's official deploy action. Its explicit `environment` is
 `backend-database`; it does not infer production from the default branch. It also
 refuses to run when backend-database is GitHub's default branch. Prisma must also
 have main as its default: a default-name preview may be refused by the platform.
@@ -92,7 +92,12 @@ Generated artifacts and both node_modules directories are ignored.
   major dependency override was applied. Review upstream fixes before production.
 - `skipped-no-credential` means the GitHub repository connection did not supply
   credentials. Check the connection to grad-path and Actions OIDC permissions.
-- A missing DATABASE_URL means the preview secret has not been configured. Your
+- `envSecret name "DATABASE_URL" is reserved` means the graph tried to bind a
+  Prisma Cloud-managed name as a custom secret. This deployment instead uses
+  **GRADPATH_DATABASE_URL** for the existing database; save the same connection
+  string under that custom name in the backend-database preview environment.
+  Local `.env` names remain DATABASE_URL and DIRECT_URL. No new database is created.
+- A missing GRADPATH_DATABASE_URL means the preview secret has not been configured. Your
   local ignored `.env` is not uploaded. DIRECT_URL is needed for separate migration
   commands, not for generating the bundle or starting this hosted service.
 - Team sign-off, Ian/John handoff, profile API wiring, and hosted verification are
