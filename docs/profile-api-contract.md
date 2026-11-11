@@ -1,10 +1,11 @@
 # Sprint 2 profile API contract and acceptance criteria
 
-Status: **John-approved proposal; teammate agreement pending — November 11, 2026.**
+Status: **Agreed Sprint 2 contract, as reported by John — November 11, 2026.**
 
 Tracks [#43](https://github.com/Group-12-Project/team-project-app/issues/43).
-This document proposes the decisions needed to finish that issue. It does not
-claim teammate agreement, implemented endpoints, or passing Sprint 2 tests.
+John reported agreement on PR #59 in the project conversation on November 11,
+2026 and authorized finalization. This records that reported agreement; it does
+not claim implemented endpoints or passing Sprint 2 tests.
 
 ## 1. User story and scope
 
@@ -15,7 +16,7 @@ application and backend restart.
 Sprint 2 will move the existing My Profile flow from browser localStorage to
 backend persistence. Devin selected MySQL and Prisma in
 [#45](https://github.com/Group-12-Project/team-project-app/issues/45).
-The proposed API preserves the existing camelCase frontend data shape. Prisma
+The agreed API preserves the existing camelCase frontend data shape. Prisma
 models and SQL column names may differ; the backend maps them to this contract.
 
 Include profile details, ordered academic interests, and read-only course-history
@@ -24,9 +25,9 @@ New account registration, production authentication, university-record imports,
 and expansion into catalogs, schedules, reviews, or other prototype modules are
 outside this contract. Existing unrelated application features remain separate.
 
-## 2. Proposed decisions for review
+## 2. Agreed Sprint 2 decisions
 
-| Decision | Proposed Sprint 2 agreement |
+| Decision | Sprint 2 agreement |
 | --- | --- |
 | Editable information | Preferred name, academic interests, academic/career goal. |
 | Academic information | Display-only in the student interface; server rejects attempts to update it. Seeded fictional data must not be described as verified university records. |
@@ -38,9 +39,9 @@ outside this contract. Existing unrelated application features remain separate.
 | Missing profile | Return 404 with an understandable empty state; do not silently create or substitute a sample record. |
 | Source of truth | MySQL through the backend. Browser localStorage is not used as a successful-read or successful-save fallback. |
 
-The demo identity proposal needs Devin's confirmation. It does not establish
-authentication or authorization. If the team already has an agreed identity
-mechanism, record it here before implementation and update the access checks.
+The agreed demo identity is limited to fictional development records. It does
+not establish authentication or authorization. Any replacement identity
+mechanism requires a contract revision and updated access checks.
 
 ## 3. Profile response fields
 
@@ -259,28 +260,29 @@ mocks demonstrate interface behavior; they do not establish database persistence
 | --- | --- |
 | John reviews this proposed contract | Approved in the project conversation, November 11, 2026; requested an additional Codex review. |
 | Codex checks issue coverage and internal consistency | Reviewed November 11, 2026 against #43, the existing profile shape, validation, and service expectations; clarified unconfirmed-save handling, repeat updates, and transaction verification. This is a document review, not implementation verification. |
-| Devin confirms backend, identity, validation, and error behavior | Pending |
-| Ian confirms identifiers, models, interests/history storage, and seed compatibility | Pending |
-| Nick confirms field permissions, request/response shapes, and UI error mapping | Pending |
+| Devin confirms backend, identity, validation, and error behavior | Agreement reported by John, November 11, 2026; see the agreement record below. |
+| Ian confirms identifiers, models, interests/history storage, and seed compatibility | Agreement reported by John, November 11, 2026; see the agreement record below. |
+| Nick confirms field permissions, request/response shapes, and UI error mapping | Agreement reported by John, November 11, 2026; see the agreement record below. |
 
-Record actual confirmations or requested changes with dates and links. John's
-approval authorizes finalizing his proposal; teammate agreement must be recorded
-accurately rather than inferred from that approval.
+Agreement record: John stated, 'We agree on it. make it all good' in the project
+conversation on November 11, 2026 while discussing [PR #59](https://github.com/Group-12-Project/team-project-app/pull/59).
+The agreement above is recorded on John's report, not as individual GitHub
+reviews submitted by Devin, Ian, or Nick. No contract changes were requested.
 
 - [x] John approves the draft or requests revisions.
-- [ ] Resolve or explicitly revise the proposed decisions in section 2 with Devin, Ian, and Nick.
-- [ ] Record agreement on the complete contract and acceptance checks.
-- [x] Commit the reviewed proposal under John's GitHub identity and link its commit or PR in #43: [PR #59](https://github.com/Group-12-Project/team-project-app/pull/59), initial commit `b2dea16eac3a0646762c59085b78227a4a51ede7`. Final team-agreed revisions remain pending.
+- [x] Record John's reported agreement on the decisions in section 2.
+- [x] Record John's reported agreement on the complete contract and acceptance checks.
+- [x] Commit the reviewed proposal under John's GitHub identity and link its commit or PR in #43: [PR #59](https://github.com/Group-12-Project/team-project-app/pull/59), initial commit `b2dea16eac3a0646762c59085b78227a4a51ede7`. Agreement is recorded in this revision.
 - [x] Link the proposal from the core model (#44), setup (#46), API (#49), frontend (#50), and integration-test (#57) issues; preserve issue ownership and existing content. Update these links/notes if team review revises the contract.
-- [ ] Update #43's criteria with the evidence and mark it Done/closed after its agreement and documentation requirements are satisfied.
+- [ ] After merging PR #59, update #43's criteria and close it with the merged contract as evidence.
 
 Passing implementation tests, completed backend/frontend work, and the Sprint 2
 release are tracked by their own issues. They are not required to define this
 contract, and closing #43 must not imply that they are complete.
 
-## Sources checked for this draft
+## Sources and review history
 
-- Live #43 body and discussion, November 11, 2026: draft inventory present; no recorded team confirmations.
+- Live #43 body and discussion, November 11, 2026: initial draft inventory reviewed before John subsequently reported agreement.
 - Live #45 body and discussion, November 11, 2026: MySQL/Prisma decision and schema/SQL attachments posted by Devin.
 - Current main-branch `src/data/sampleProfile.js`, retrieved November 11, 2026: existing profile response shape.
-- Local `src/utils/profileValidation.js`, `src/services/profileService.js`, and `docs/architecture.md`: existing normalization, form limits, response expectations, and edit permissions. Backend rules and endpoints above are proposals.
+- Local `src/utils/profileValidation.js`, `src/services/profileService.js`, and `docs/architecture.md`: existing normalization, form limits, response expectations, and edit permissions. Backend rules and endpoints above define agreed requirements; implementation is tracked separately.
