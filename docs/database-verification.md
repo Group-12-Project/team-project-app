@@ -1,5 +1,26 @@
 # Prisma Postgres verification — 2026-11-11
 
+## Profile endpoint verification — November 12, 2026
+
+GET/PATCH `/api/profile` now implement the #43 contract for the fictional identity
+900001 → sample-current-student-001. The demo seed's missing academic fields and
+course snapshots were completed without resetting saved editable fields.
+
+`npm run db:verify-profile-api` passed against hosted PostgreSQL via local HTTP
+servers: complete GET, normalized/repeated PATCH, persistence after a real backend
+process restart without reseeding, protected/invalid updates, partial saves,
+clearing interests, concurrent partial updates, actual constraint-failure rollback,
+missing profile errors, sanitized database-unavailable errors, and disabled demo
+access. The temporary fixture was removed. No connection strings are recorded.
+
+All 77 automated tests, root and deployment type checks, lint, frontend/deployment
+builds, deployment config checks, and bundled smoke test passed. The new deployed
+profile endpoints still need a push/deployment and John's integration verification;
+earlier deployed health results below are not profile-endpoint evidence.
+
+See [implementation handoff](profile-api-implementation.md) and
+[actual HTTP response examples](profile-api-examples.json).
+
 The database decision has changed from local MySQL to hosted Prisma Postgres at
 Devin's request. Earlier MySQL verification is historical and does not establish
 connectivity to the hosted PostgreSQL database.

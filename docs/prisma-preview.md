@@ -50,7 +50,8 @@ Open GitHub **Actions → Prisma backend preview** after pushing. Read the job
 summary for the actual preview URL and request `/health`, then `/health/db`.
 The first should return `{"status":"ok"}` and the second
 `{"database":"connected"}`. The server root `/` returns 404; this is a backend
-health service, not a hosted React interface or completed profile API.
+health service. GET/PATCH `/api/profile` are also available in backend-preview,
+using only the fictional development identity; this does not host the React interface.
 
 ## Local verification
 
@@ -107,8 +108,11 @@ Generated artifacts and both node_modules directories are ignored.
 - A missing GRADPATH_DATABASE_URL means the preview secret has not been configured. Your
   local ignored `.env` is not uploaded. DIRECT_URL is needed for separate migration
   commands, not for generating the bundle or starting this hosted service.
-- Team sign-off, Ian/John handoff, profile API wiring, and hosted verification are
-  still pending. A deployment does not complete these requirements.
+- Profile endpoint implementation and local HTTP verification against hosted
+  PostgreSQL are documented in [API handoff](profile-api-implementation.md).
+  John owns application wiring and integration verification; Nick owns frontend
+  wiring. The updated endpoints require a new deployment and John’s integration
+  check before claiming hosted endpoint verification complete.
 
 References: [Prisma deploy on push](https://www.prisma.io/docs/compute/deploy-on-push),
 [Composer service input](https://www.prisma.io/docs/composer/service-input),

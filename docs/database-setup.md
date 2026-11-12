@@ -73,7 +73,9 @@ Expected response: `{"database":"connected"}`. `db:check` must confirm that Pris
 can read the fictional profile and its two interests. The backend runs on port 3001
 by default and binds to `0.0.0.0` so hosting can reach it. Set `HOST=127.0.0.1`
 for loopback-only local access. Vite runs the frontend separately. The frontend still uses
-browser storage pending John's profile API integration.
+browser storage pending frontend API integration.
+The GET/PATCH endpoints are implemented by Devin; Nick integrates the frontend,
+and John owns application wiring and integration verification.
 
 ## Host the backend with Prisma Compute
 
@@ -104,7 +106,8 @@ is not uploaded. Use a development database for previews. Allow the platform to 
 `PORT` if it provides one. `/health` returns server liveness; `/health/db` checks the
 database connection. Run migrations/seeds separately against the intended database;
 this start command does not perform them. This entry point serves the backend
-health endpoints; serving the React frontend and wiring its API are separate work.
+health endpoints and development-only GET/PATCH `/api/profile`; serving the React
+frontend and wiring it to the API are separate work. See [profile API handoff](profile-api-implementation.md).
 
 Reference: https://www.prisma.io/docs/compute/environment-variables
 
@@ -125,7 +128,8 @@ Devin owns the database project and grants teammates access through Prisma Conso
 workspace/project invitations supported by the chosen plan. Share credentials only
 through the team's private secret-sharing channel; never commit them.
 
-Ian owns future migrations/seeds. Coordinate shared-schema changes: one migration
+Ian owns reviewed models and migrations; Devin owns the profile API seed completion.
+Coordinate shared-schema changes: one migration
 owner at a time, review SQL in a PR, and apply committed migrations with
 `npm run db:migrate`. Do not rewrite migrations already applied to PostgreSQL.
 Use a separate disposable development database for authoring migrations with
@@ -134,11 +138,15 @@ database if Prisma cannot create one automatically. Do not reset the shared data
 or use it as a shadow database. Seed may be repeated without duplicate fixture rows;
 it does not reset edited fixture values or erase teammates' data.
 
-John owns API routing, authorization, validation, frontend wiring, and team setup
-documentation. Reuse `server/db.ts` only on the backend. Serialize BigInt IDs as strings
-and convert decimals to agreed DTO types. Never use `VITE_` for database secrets.
-S2-01/S2-02 identity and profile/API contract agreement, named teammate sign-offs,
-and actual handoff delivery still need to be recorded. None are claimed complete.
+Devin owns GET/PATCH profile endpoints, backend validation, transactional persistence,
+seed completion, and backend/database tests (#48/#49/#55). John owns contract
+coordination, application wiring, setup coordination, and integration verification.
+Nick owns frontend API integration. John confirmed this allocation and the opaque
+identity mapping on November 12, 2026. Reuse `server/db.ts` only on the backend.
+The API maps database ID 900001 to sample-current-student-001, formats academic
+values, and selects one fictional development profile. Never use `VITE_` for secrets.
+Production authentication is not implemented; replace demo selection with verified
+identity and ownership checks before enabling these routes outside development.
 
 ## Legacy MySQL transition
 

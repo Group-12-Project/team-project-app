@@ -14,6 +14,10 @@ assert.ok(result.files[0].sections.composer, 'Composer configuration must be pre
 console.log('PASS: hosting config loads independently of the root Prisma ORM 7 config.')
 
 // Execute the app declaration as deployment does, without cloud credentials or requests.
-const graph = Load(app)
+const graph = Load(app, { environment: { name: 'backend-preview' } })
 assert.ok(inputManifest(graph).length > 0, 'The backend must declare its configuration input')
+assert.equal(inputManifest(graph)[0].binding.demoProfileEnabled, true)
 console.log('PASS: deployment app graph loads, including its database secret binding.')
+const production = Load(app, { environment: { name: 'production' } })
+assert.equal(inputManifest(production)[0].binding.demoProfileEnabled, false)
+console.log('PASS: demo API enabled for backend-preview and disabled for production.')

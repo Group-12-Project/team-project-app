@@ -64,6 +64,8 @@ npm install
 For the hosted Prisma Postgres database and backend health server, follow
 [database setup and team handoff](docs/database-setup.md). The frontend profile
 currently continues to use browser storage while API integration is pending.
+Development-only GET/PATCH `/api/profile`, database verification, and response
+examples are documented in the [profile API handoff](docs/profile-api-implementation.md).
 
 ```bash
 npm run dev

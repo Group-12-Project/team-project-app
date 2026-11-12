@@ -7,7 +7,7 @@ import { type } from 'arktype'
 export default compute({
   name: 'api',
   deps: {},
-  input: type({ databaseUrl: secretString() }),
+  input: type({ databaseUrl: secretString(), demoProfileEnabled: 'boolean' }),
   build: node({ module: import.meta.url, entry: './dist/server.mjs' }),
   expose: { http: rawHttpContract },
 })

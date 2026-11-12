@@ -1,14 +1,10 @@
 import { prisma } from '../server/db.ts'
+import { createProfileRepository } from '../server/profile/repository.ts'
 
 try {
   await prisma.$queryRaw`SELECT 1`
-  const profile = await prisma.student_profiles.findUnique({
-    where: { user_id: 900001n },
-    include: { profile_interests: true },
-  })
-  if (profile?.preferred_name !== 'Demo Student' || profile.profile_interests.length !== 2) {
-    throw new Error('Seed verification failed')
-  }
+  const profile = await createProfileRepository(prisma).get()
+  if (profile.id !== 'sample-current-student-001') throw new Error('Profile identity mapping failed')
   // Exercise the corrected models through the generated client without changing data.
   await prisma.advisor_assignments.count()
   await prisma.weekly_time_preferences.count()

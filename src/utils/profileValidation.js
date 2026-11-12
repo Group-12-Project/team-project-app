@@ -1,9 +1,5 @@
-export const PROFILE_LIMITS = {
-  preferredName: 60,
-  careerGoal: 300,
-  interests: 8,
-  interestLength: 50,
-}
+import { PROFILE_LIMITS } from '../../shared/profileLimits.ts'
+export { PROFILE_LIMITS }
 
 export function normalizeInterests(value) {
   const seen = new Set()

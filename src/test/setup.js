@@ -5,7 +5,9 @@ import { afterEach, vi } from 'vitest'
 afterEach(() => {
   cleanup()
   vi.restoreAllMocks()
-  window.localStorage.clear()
-  window.location.hash = ''
+  if (typeof window !== 'undefined') {
+    window.localStorage.clear()
+    window.location.hash = ''
+  }
 })
 

@@ -8,7 +8,7 @@ process.env.GRADPATH_SMOKE_DB = 'postgresql://demo:demo@127.0.0.1:1/demo'
 const instance = await bootstrapService(service, {
   service: { port: 43179 },
   inputs: {},
-  input: { databaseUrl: envSecret('GRADPATH_SMOKE_DB') },
+  input: { databaseUrl: envSecret('GRADPATH_SMOKE_DB'), demoProfileEnabled: false },
 })
 
 try {
@@ -17,6 +17,7 @@ try {
   assert.deepEqual(await health.json(), { status: 'ok' })
   const missing = await fetch(new URL('/missing', instance.url))
   assert.equal(missing.status, 404)
+  assert.equal((await fetch(new URL('/api/profile', instance.url))).status, 404)
   const database = await fetch(new URL('/health/db', instance.url))
   assert.equal(database.status, 503)
   assert.deepEqual(await database.json(), { database: 'unavailable' })

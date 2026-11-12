@@ -19,7 +19,8 @@
     "db:check": "tsx scripts/check-db.ts",
     "db:studio": "prisma studio",
     "server:dev": "tsx watch server/index.ts",
-    "typecheck:server": "tsc -p tsconfig.server.json"
+    "typecheck:server": "tsc -p tsconfig.server.json",
+    "db:verify-profile-api": "tsx scripts/verify-profile-api.ts"
   },
   "engines": {
     "node": ">=22.12.0"

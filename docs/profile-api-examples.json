@@ -1,0 +1,107 @@
+{
+  "provenance": "Actual local HTTP responses against hosted PostgreSQL. GET selects development profile 900001. PATCH responses use a temporary isolated fictional fixture with the same public alias in its test server; its history IDs therefore differ from the selected profile. Fixture deleted after verification.",
+  "selectedDevelopmentGet": {
+    "status": 200,
+    "response": {
+      "id": "sample-current-student-001",
+      "preferredName": "Demo Student",
+      "studentStatus": "Current graduate student",
+      "graduateProgram": "M.S. Computer Science",
+      "specialization": "Software Engineering",
+      "academicInterests": [
+        "Accessible design",
+        "Software engineering"
+      ],
+      "careerGoal": "Build accessible educational software.",
+      "courseHistory": [
+        {
+          "id": "history-4",
+          "code": "ITCS 6114",
+          "title": "Algorithms and Data Structures",
+          "term": "Fall 2026"
+        },
+        {
+          "id": "history-5",
+          "code": "ITCS 6162",
+          "title": "Knowledge Discovery in Databases",
+          "term": "Fall 2026"
+        },
+        {
+          "id": "history-6",
+          "code": "ITIS 6155",
+          "title": "Software Systems Design and Implementation",
+          "term": "Spring 2026"
+        }
+      ],
+      "creditsCompleted": 24,
+      "creditsRequired": 30,
+      "expectedGraduation": "May 2027",
+      "gpa": "3.4"
+    }
+  },
+  "successfulPatch": {
+    "request": {
+      "preferredName": "  Demo Updated Student  ",
+      "academicInterests": [
+        " Databases ",
+        "",
+        "databases",
+        "Accessible design"
+      ],
+      "careerGoal": "  Build accessible tools for graduate students.  "
+    },
+    "status": 200,
+    "response": {
+      "id": "sample-current-student-001",
+      "preferredName": "Demo Updated Student",
+      "studentStatus": "Current graduate student",
+      "graduateProgram": "M.S. Computer Science",
+      "specialization": "Software Engineering",
+      "academicInterests": [
+        "Databases",
+        "Accessible design"
+      ],
+      "careerGoal": "Build accessible tools for graduate students.",
+      "courseHistory": [
+        {
+          "id": "history-10",
+          "code": "ITCS 6114",
+          "title": "Algorithms and Data Structures",
+          "term": "Fall 2026"
+        },
+        {
+          "id": "history-11",
+          "code": "ITCS 6162",
+          "title": "Knowledge Discovery in Databases",
+          "term": "Fall 2026"
+        },
+        {
+          "id": "history-12",
+          "code": "ITIS 6155",
+          "title": "Software Systems Design and Implementation",
+          "term": "Spring 2026"
+        }
+      ],
+      "creditsCompleted": 24,
+      "creditsRequired": 30,
+      "expectedGraduation": "May 2027",
+      "gpa": "3.4"
+    }
+  },
+  "rejectedUpdate": {
+    "request": {
+      "careerGoal": "Do not save this goal.",
+      "gpa": "4.0"
+    },
+    "status": 400,
+    "response": {
+      "error": {
+        "code": "FIELD_NOT_ALLOWED",
+        "message": "Only editable profile fields may be submitted.",
+        "fields": {
+          "gpa": "This field cannot be updated."
+        }
+      }
+    }
+  }
+}
