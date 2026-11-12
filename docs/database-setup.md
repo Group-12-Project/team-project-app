@@ -8,8 +8,9 @@ local MySQL proposal. Prisma Console manages the hosted database; Prisma Studio
 browses records; Prisma ORM connects backend code. The editor/GitHub extension
 does not provision a database or supply credentials.
 
-The MySQL design is translated into PostgreSQL models and a new initial migration.
-All 24 models, relationships, enums, original business check constraints, and
+The supplied `gradpath_complete_database.sql` MySQL dump is the schema reference.
+Its design is translated into PostgreSQL models and versioned migrations.
+All 26 models, relationships, enums, original business check constraints, and
 update-time triggers are retained. Unsigned fields become signed PostgreSQL numbers
 with nonnegative checks, so the positive range of BIGINT is smaller. PostgreSQL text
 comparisons are case-sensitive by default, unlike the legacy MySQL collation; agree
@@ -144,8 +145,9 @@ and actual handoff delivery still need to be recorded. None are claimed complete
 The old local MySQL container, fictional-data volume, Docker network, and image
 were removed on 2026-11-11. The obsolete `.env.mysql.local` credential backup and
 duplicate archived MySQL migration were also removed. Git history retains the old
-migration if needed. The original `gradplanner_full_database.sql` remains as the
-team's historical schema reference; it is not a PostgreSQL installation script.
+migration if needed. The obsolete `gradplanner_full_database.sql` has been replaced
+by the supplied `gradpath_complete_database.sql` schema-only MySQL dump.
+The dump is a design reference, not a PostgreSQL installation script.
 The active PostgreSQL migrations, seed, and private `.env` are preserved. This was
 a fresh PostgreSQL setup, not an in-place data migration.
 
@@ -181,3 +183,15 @@ and connection checks now passed; see [verification evidence](database-verificat
 Do not use the old MySQL connection check as proof of a hosted Prisma Postgres connection.
 
 Official guide: https://www.prisma.io/docs/postgres
+
+## Corrected schema reference
+
+The supplied dump contains 26 tables. The follow-up migration
+`20261111000300_align_complete_database` adds advisor assignments, weekly time
+preferences, the advisor user role, and student education/attendance fields. It
+also corrects the opportunity/course-history foreign keys to use ON DELETE SET NULL.
+The already-applied initial migration is retained; no existing table is dropped.
+Business checks for assignment dates and weekly time ranges are enforced in SQL.
+Run `npm run db:migrate` to apply the correction, then regenerate the Prisma client.
+The MySQL collation is not reproduced: PostgreSQL text uniqueness remains
+case-sensitive, as described above.

@@ -66,3 +66,19 @@ reproduction steps are recorded in [preview setup](prisma-preview.md).
 - Public backend URL: [PASTE_PUBLIC_DEPLOYMENT_URL](https://t7b1030sxavsotv2z2thyuy7.ewr.prisma.build/)
 - GET /health: {"status":"ok"}
 - GET /health/db: {"database":"connected"}
+
+## Corrected complete schema — November 11, 2026
+
+Replaced the obsolete `gradplanner_full_database.sql` reference with the supplied
+`gradpath_complete_database.sql` schema-only MySQL dump (26 tables).
+Applied `20261111000300_align_complete_database` to the configured hosted
+PostgreSQL database successfully, retaining the initial migration and existing rows.
+
+Verified Prisma validation/client generation, backend TypeScript, ESLint,
+all 34 tests in 6 files, and the frontend production build. The expanded
+`npm run db:check` passed against hosted PostgreSQL: existing fictional profile
+and interests preserved, new tables accessible, advisor role available, all four
+corrected foreign keys use SET NULL, and new business checks exist.
+
+These changes have not been committed, pushed, or redeployed. The hosted database
+is updated; the deployed backend will regenerate its client on its next build.

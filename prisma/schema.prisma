@@ -31,8 +31,8 @@ model career_opportunities {
   related_course_id  BigInt?
   related_skill_id   BigInt?
   publication_status career_opportunities_publication_status @default(draft)
-  courses            courses?                                @relation(fields: [related_course_id], references: [course_id], onUpdate: NoAction, map: "fk_career_opportunities_course")
-  skills             skills?                                 @relation(fields: [related_skill_id], references: [skill_id], onUpdate: NoAction, map: "fk_career_opportunities_skill")
+  courses            courses?                                @relation(fields: [related_course_id], references: [course_id], onDelete: SetNull, onUpdate: NoAction, map: "fk_career_opportunities_course")
+  skills             skills?                                 @relation(fields: [related_skill_id], references: [skill_id], onDelete: SetNull, onUpdate: NoAction, map: "fk_career_opportunities_skill")
   saved_steps        saved_steps[]
 
   @@index([related_course_id], map: "ix_career_opportunities_course")
@@ -59,9 +59,9 @@ model course_history {
   completion_status     course_history_completion_status
   earned_credits        Decimal                          @default(0.0) @db.Decimal(4, 1)
   grade                 String?                          @db.VarChar(10)
-  courses               courses?                         @relation(fields: [course_id], references: [course_id], onUpdate: NoAction, map: "fk_course_history_course")
+  courses               courses?                         @relation(fields: [course_id], references: [course_id], onDelete: SetNull, onUpdate: NoAction, map: "fk_course_history_course")
   student_profiles      student_profiles                 @relation(fields: [student_user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_course_history_student")
-  terms                 terms?                           @relation(fields: [term_id], references: [term_id], onUpdate: NoAction, map: "fk_course_history_term")
+  terms                 terms?                           @relation(fields: [term_id], references: [term_id], onDelete: SetNull, onUpdate: NoAction, map: "fk_course_history_term")
 
   @@index([course_id], map: "ix_course_history_course")
   @@index([student_user_id], map: "ix_course_history_student")
@@ -280,17 +280,21 @@ model skills {
 }
 
 model student_profiles {
-  user_id                    BigInt               @id
-  preferred_name             String?              @db.VarChar(100)
+  user_id                    BigInt                                    @id
+  preferred_name             String?                                   @db.VarChar(100)
   program_id                 BigInt?
   concentration_id           BigInt?
-  student_status             String?              @db.VarChar(50)
-  academic_year              String?              @db.VarChar(40)
-  expected_graduation        DateTime?            @db.Date
-  gpa                        Decimal?             @db.Decimal(4, 2)
-  career_goal                String?              @db.Text
-  recorded_completed_credits Decimal?             @db.Decimal(5, 1)
-  recorded_required_credits  Decimal?             @db.Decimal(5, 1)
+  student_status             String?                                   @db.VarChar(50)
+  current_education_level    student_profiles_current_education_level?
+  attendance_type            student_profiles_attendance_type?
+  academic_year              String?                                   @db.VarChar(40)
+  expected_graduation        DateTime?                                 @db.Date
+  gpa                        Decimal?                                  @db.Decimal(4, 2)
+  career_goal                String?                                   @db.Text
+  recorded_completed_credits Decimal?                                  @db.Decimal(5, 1)
+  recorded_required_credits  Decimal?                                  @db.Decimal(5, 1)
+  advisor_assignments        advisor_assignments[]
+  weekly_time_preferences    weekly_time_preferences[]
   course_history             course_history[]
   course_reviews             course_reviews[]
   interview_progress         interview_progress[]
@@ -298,9 +302,9 @@ model student_profiles {
   profile_preferences        profile_preferences?
   saved_steps                saved_steps[]
   semester_plans             semester_plans[]
-  concentrations             concentrations?      @relation(fields: [concentration_id], references: [concentration_id], onDelete: Restrict, onUpdate: NoAction, map: "fk_student_profiles_concentration")
-  programs                   programs?            @relation(fields: [program_id], references: [program_id], onDelete: Restrict, onUpdate: NoAction, map: "fk_student_profiles_program")
-  users                      users                @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_student_profiles_user")
+  concentrations             concentrations?                           @relation(fields: [concentration_id], references: [concentration_id], onDelete: Restrict, onUpdate: NoAction, map: "fk_student_profiles_concentration")
+  programs                   programs?                                 @relation(fields: [program_id], references: [program_id], onDelete: Restrict, onUpdate: NoAction, map: "fk_student_profiles_program")
+  users                      users                                     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_student_profiles_user")
 
   @@index([concentration_id], map: "ix_student_profiles_concentration")
   @@index([program_id], map: "ix_student_profiles_program")
@@ -320,19 +324,20 @@ model terms {
 }
 
 model users {
-  id                                                   BigInt               @id @default(autoincrement())
-  full_name                                            String               @db.VarChar(150)
-  university_email                                     String               @unique(map: "university_email") @db.VarChar(255)
-  password_hash                                        String?              @db.VarChar(255)
-  auth_provider                                        String?              @db.VarChar(50)
-  provider_subject                                     String?              @db.VarChar(255)
+  id                                                   BigInt                @id @default(autoincrement())
+  full_name                                            String                @db.VarChar(150)
+  university_email                                     String                @unique(map: "university_email") @db.VarChar(255)
+  password_hash                                        String?               @db.VarChar(255)
+  auth_provider                                        String?               @db.VarChar(50)
+  provider_subject                                     String?               @db.VarChar(255)
   role                                                 users_role
-  account_status                                       users_account_status @default(pending)
-  created_at                                           DateTime             @default(now()) @db.Timestamp(0)
-  updated_at                                           DateTime             @default(now()) @updatedAt @db.Timestamp(0)
+  account_status                                       users_account_status  @default(pending)
+  created_at                                           DateTime              @default(now()) @db.Timestamp(0)
+  updated_at                                           DateTime              @default(now()) @updatedAt @db.Timestamp(0)
+  advisor_assignments                                  advisor_assignments[]
   admin_audit_events                                   admin_audit_events[]
-  review_flags_review_flags_reported_by_user_idTousers review_flags[]       @relation("review_flags_reported_by_user_idTousers")
-  review_flags_review_flags_reviewer_user_idTousers    review_flags[]       @relation("review_flags_reviewer_user_idTousers")
+  review_flags_review_flags_reported_by_user_idTousers review_flags[]        @relation("review_flags_reported_by_user_idTousers")
+  review_flags_review_flags_reviewer_user_idTousers    review_flags[]        @relation("review_flags_reviewer_user_idTousers")
   student_profiles                                     student_profiles?
 
   @@unique([auth_provider, provider_subject], map: "uq_users_provider_identity")
@@ -409,6 +414,7 @@ enum courses_publication_status {
 }
 
 enum users_role {
+  advisor
   student
   admin
 }
@@ -423,4 +429,46 @@ enum career_opportunities_publication_status {
   draft
   published
   archived
+}
+
+model advisor_assignments {
+  advisor_user_id BigInt
+  student_user_id BigInt
+  assigned_at     DateTime         @default(now()) @db.Timestamp(0)
+  ended_at        DateTime?        @db.Timestamp(0)
+  advisor         users            @relation(fields: [advisor_user_id], references: [id], onDelete: Restrict, onUpdate: NoAction, map: "fk_advisor_assignments_advisor")
+  student         student_profiles @relation(fields: [student_user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_advisor_assignments_student")
+
+  @@id([advisor_user_id, student_user_id])
+  @@index([student_user_id], map: "idx_advisor_assignments_student")
+}
+
+model weekly_time_preferences {
+  time_preference_id BigInt                                  @id @default(autoincrement())
+  student_user_id    BigInt
+  weekday            Int
+  start_time         DateTime                                @db.Time(0)
+  end_time           DateTime                                @db.Time(0)
+  preference_type    weekly_time_preferences_preference_type
+  notes              String?                                 @db.VarChar(255)
+  student            student_profiles                        @relation(fields: [student_user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_weekly_time_preferences_student")
+
+  @@index([student_user_id, weekday], map: "idx_weekly_prefs_student_day")
+}
+
+enum student_profiles_current_education_level {
+  undergraduate
+  graduate
+  other
+}
+
+enum student_profiles_attendance_type {
+  traditional
+  non_traditional
+}
+
+enum weekly_time_preferences_preference_type {
+  preferred_class
+  work
+  unavailable
 }
