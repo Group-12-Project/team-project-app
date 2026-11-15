@@ -23,3 +23,7 @@ Thumbs.db
 server/generated/
 .prisma/
 
+
+# Isolated integration verification artifacts
+.pg-test/
+.pg-password

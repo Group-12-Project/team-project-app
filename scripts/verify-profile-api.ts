@@ -8,6 +8,16 @@ import type { PrismaClient, Prisma } from '../server/generated/prisma/client.ts'
 import { createProfileRepository } from '../server/profile/repository.ts'
 import { seedDevelopmentProfile } from '../prisma/seedProfile.ts'
 
+// This verification applies fixtures and seed checks only in a dedicated test DB.
+const testUrl = process.env.TEST_DATABASE_URL
+if (!testUrl || !new URL(testUrl).pathname.endsWith('_test')) {
+  throw new Error('TEST_DATABASE_URL must name an isolated database ending in _test.')
+}
+// db.ts initializes its client during module import, so validate the selected URL too.
+if (process.env.DATABASE_URL !== testUrl) {
+  throw new Error('Run via npm run test:database to select the isolated test URL.')
+}
+
 const userId = BigInt(`0x${randomBytes(6).toString('hex')}`) + 1000000000000n
 let created = false
 let child: ChildProcess | undefined
@@ -153,7 +163,7 @@ try {
   console.log('PASS: concurrent partial updates preserve both committed fields.')
 
   await writeFile('docs/profile-api-examples.json', JSON.stringify({
-    provenance: 'Actual local HTTP responses against hosted PostgreSQL. GET selects development profile 900001. PATCH responses use a temporary isolated fictional fixture with the same public alias in its test server; its history IDs therefore differ from the selected profile. Fixture deleted after verification.',
+    provenance: 'Actual local HTTP responses against an isolated PostgreSQL test database. GET selects development profile 900001. PATCH responses use a temporary isolated fictional fixture with the same public alias in its test server; its history IDs therefore differ from the selected profile. Fixture deleted after verification.',
     selectedDevelopmentGet: { status: selectedHttp.status, response: selectedHttp.body },
     successfulPatch: { request: patch, status: updated.status, response: updated.body },
     rejectedUpdate: { request: { careerGoal: 'Do not save this goal.', gpa: '4.0' }, status: rejected.status, response: rejected.body },

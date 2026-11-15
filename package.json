@@ -20,7 +20,9 @@
     "db:studio": "prisma studio",
     "server:dev": "tsx watch server/index.ts",
     "typecheck:server": "tsc -p tsconfig.server.json",
-    "db:verify-profile-api": "tsx scripts/verify-profile-api.ts"
+    "db:verify-profile-api": "node scripts/test-database.mjs",
+    "test:database": "node scripts/test-database.mjs",
+    "uml:render": "plantuml -tsvg docs/uml/*.puml"
   },
   "engines": {
     "node": ">=22.12.0"
