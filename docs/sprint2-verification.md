@@ -67,3 +67,31 @@ render and whitespace diff check. Secret exclusion checks returned `.env`,
 `.pg-password` and `.pg-test/server.log` as ignored; only `.env.example` was
 tracked among environment/key/database patterns. Separate live database harness
 passed all ten result groups. Chrome/manual browser checks remain blocked.
+
+## Assignment follow-up — November 15, 2026
+
+- Added reproducible `db:local:init/start/stop` PostgreSQL tooling. Verified fresh
+  initialization, stop/start, refusal to overwrite existing configuration, both
+  fresh databases' migrations, seed, `db:check`, and the complete restart/rollback
+  harness against the helper-created test database. No shared DB was modified.
+- Added the rubric's per-member local/shared verification table directly to
+  `docs/database-setup.md`. All personal demonstration rows remain pending.
+- Added isolated PostgreSQL GitHub Actions verification for PRs; hosted CI result
+  is reported separately from local execution. No cloud/deployment credentials used.
+- Added database-target regression tests: explicit test URL required, PostgreSQL
+  `_test` name required, same host/database rejected despite changed credentials
+  or URL query. Distinct dev/test databases on the same server are allowed.
+- Local lint, 93 tests across 11 files, backend typecheck, Prisma validation without
+  private environment configuration, and production build passed.
+- Ran `npm audit fix` using compatible dependency updates: ESLint 10.15.0 and
+  minimatch 11.0.5; audit now reports **0 vulnerabilities**, superseding the earlier
+  three moderate advisory count. Prisma/pg query warning remains non-failing.
+- Retried Chrome computer access: denied again. Browser checks remain human work.
+- Confirmed author-history evidence for Ian's integration commits, Devin's backend
+  commit 65c98c4, and John's contract commits on PR #59. No new Sprint 2 Nick
+  commit was found among inspected branches. This is not individual run evidence.
+- Prepared release notes and a detailed human handoff; no release, merge,
+  teammate approval, Copilot/Figma usage or personal demonstration is claimed.
+
+The real DB harness now writes JSON examples only when PROFILE_API_EVIDENCE_FILE
+is explicitly supplied, so routine test runs do not dirty committed evidence.

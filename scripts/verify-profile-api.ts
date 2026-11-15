@@ -162,7 +162,7 @@ try {
   assert.equal(final.body.careerGoal, 'Concurrent goal remains stored.')
   console.log('PASS: concurrent partial updates preserve both committed fields.')
 
-  await writeFile('docs/profile-api-examples.json', JSON.stringify({
+  if (process.env.PROFILE_API_EVIDENCE_FILE) await writeFile(process.env.PROFILE_API_EVIDENCE_FILE, JSON.stringify({
     provenance: 'Actual local HTTP responses against an isolated PostgreSQL test database. GET selects development profile 900001. PATCH responses use a temporary isolated fictional fixture with the same public alias in its test server; its history IDs therefore differ from the selected profile. Fixture deleted after verification.',
     selectedDevelopmentGet: { status: selectedHttp.status, response: selectedHttp.body },
     successfulPatch: { request: patch, status: updated.status, response: updated.body },

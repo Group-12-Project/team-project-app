@@ -22,7 +22,10 @@
     "typecheck:server": "tsc -p tsconfig.server.json",
     "db:verify-profile-api": "node scripts/test-database.mjs",
     "test:database": "node scripts/test-database.mjs",
-    "uml:render": "plantuml -tsvg docs/uml/*.puml"
+    "uml:render": "plantuml -tsvg docs/uml/*.puml",
+    "db:local:init": "node scripts/local-postgres.mjs init",
+    "db:local:start": "node scripts/local-postgres.mjs start",
+    "db:local:stop": "node scripts/local-postgres.mjs stop"
   },
   "engines": {
     "node": ">=22.12.0"

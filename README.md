@@ -7,7 +7,9 @@ is not production authentication.
 
 ```sh
 npm ci
-# Configure private .env from .env.example; see setup guide.
+# Fresh checkout with PostgreSQL 17 installed:
+npm run db:local:init
+# Or configure private .env manually; see setup guide.
 npm run db:generate
 npm run db:migrate
 npm run db:seed
@@ -18,6 +20,7 @@ npm run dev
 
 [Database setup](docs/database-setup.md) · [API contract](docs/profile-api-contract.md) ·
 [Issue matrix and verification](docs/sprint2-verification.md) ·
+[Remaining human steps](docs/sprint2-your-next-steps.md) ·
 [Review/release checklist](docs/sprint2-release-checklist.md) ·
 [AI design corrections](docs/ai-design-review.md) · [UML](docs/uml/)
 

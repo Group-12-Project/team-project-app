@@ -27,3 +27,5 @@ server/generated/
 # Isolated integration verification artifacts
 .pg-test/
 .pg-password
+
+.local-postgres/

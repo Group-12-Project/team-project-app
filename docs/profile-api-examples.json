@@ -64,19 +64,19 @@
       "careerGoal": "Build accessible tools for graduate students.",
       "courseHistory": [
         {
-          "id": "history-7",
+          "id": "history-4",
           "code": "ITCS 6114",
           "title": "Algorithms and Data Structures",
           "term": "Fall 2026"
         },
         {
-          "id": "history-8",
+          "id": "history-5",
           "code": "ITCS 6162",
           "title": "Knowledge Discovery in Databases",
           "term": "Fall 2026"
         },
         {
-          "id": "history-9",
+          "id": "history-6",
           "code": "ITIS 6155",
           "title": "Software Systems Design and Implementation",
           "term": "Spring 2026"

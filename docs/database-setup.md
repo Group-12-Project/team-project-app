@@ -228,3 +228,59 @@ Each teammate must personally complete the [release checklist](sprint2-release-c
 The existing hosted verification record is prior backend evidence, not proof of
 each member's integrated frontend run. No hosted credentials were available or
 used in this integration session.
+
+## Required local database setup for every teammate
+
+The assignment requires **both each member's local database and a shared cloud
+integration database**. Cloud access alone does not satisfy the local requirement.
+PostgreSQL 17 fits the existing relational models, foreign keys and atomic profile
+updates; Prisma keeps SQL access separate from the React interface. Reuse Devin's
+shared Prisma Postgres development environment only for team-approved integration.
+
+On a fresh checkout, install PostgreSQL 17 (macOS: `brew install postgresql@17`;
+on other systems install PostgreSQL and put its tools on PATH). Then:
+
+```sh
+npm ci
+npm run db:local:init
+npm run db:generate
+npm run db:migrate
+npm run db:seed
+npm run db:check
+npm run test:database
+npm run server:dev
+# Second terminal:
+npm run dev
+```
+
+The helper binds PostgreSQL to loopback port 55438, writes random credentials to
+ignored private `.env`/`.local-postgres` files, and creates `gradpath_local` plus
+`gradpath_local_test`. It refuses to replace existing configuration. Set
+`POSTGRES_BIN` to the PostgreSQL bin directory if tools cannot be found. Set
+`LOCAL_POSTGRES_PORT` consistently for init/start if the default port is occupied.
+After reboot use `npm run db:local:start`; stop with `npm run db:local:stop`.
+Stop preserves all records. No login service or cloud resource is created.
+Use individual non-administrator accounts in the shared cloud database; the
+local helper's cluster administrator is only for its isolated fictional cluster.
+
+If `.env` already exists, keep it private and configure separate local databases
+manually or use a fresh checkout. Do not replace a teammate's hosted credentials.
+The helper has been tested for init, stop/start and refusing a second init.
+
+### Required team database verification table
+
+Agent execution is separate from personal verification. Replace Pending only
+when the named person actually performs and records the operation/date.
+
+| Member | Local connection / operation test | Result | Shared cloud operation | Result |
+| --- | --- | --- | --- | --- |
+| Ian-Peterson | Install, migrate, seed, app save/read/restart | Personal run pending; agent isolated run passed Nov 15 | Verify updated cross-member record | Pending |
+| johnmi-works | Same local setup and operations | Pending | Create fictional shared verification record | Pending |
+| dsehgal-projects | Same local setup and operations | Pending; prior hosted backend evidence is separate | Retrieve John's shared verification record | Pending |
+| nwhitton-hash | Same local setup and operations | Pending | Update that agreed fictional record | Pending |
+
+Agree on a disposable fictional record and authorized identity mapping before the
+shared test. The current profile API intentionally selects a single demo identity;
+use the team-approved fixture and record its opaque public ID, not credentials.
+Record timestamp, actor, previous/updated fictional value and verifier. Do not
+change a teammate's working profile or reset/reseed the shared database for this.

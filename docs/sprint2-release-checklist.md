@@ -21,7 +21,8 @@ Before approving integration:
 - [ ] Each member supplies their own meaningful commit; do not impersonate others.
 - [ ] Browser: keyboard edit/validation/save/cancel, 390px layout, unavailable backend,
       lost-response stored-value check and fresh-browser reload after API restart.
-- [ ] Review dependency advisories and PostgreSQL driver warning.
+- [x] Fixed compatible ESLint/minimatch advisories; npm audit reports 0 vulnerabilities.
+- [ ] Review PostgreSQL driver deprecation warning before future adapter upgrades.
 - [ ] Review/merge the PR into the agreed integration branch; rerun required checks.
 - [ ] Only after approval, create the tag/release on the verified submission commit.
 
@@ -33,3 +34,6 @@ Before approving integration:
 | nwhitton-hash | Pending | Pending | Pending |
 
 No release has been published. Issue ownership remains unchanged.
+
+Release text is prepared in [sprint2-release-notes.md](sprint2-release-notes.md).
+Human-only workflow: [sprint2-your-next-steps.md](sprint2-your-next-steps.md).

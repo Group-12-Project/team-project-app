@@ -1,0 +1,45 @@
+name: Sprint 2 verification
+on:
+  pull_request:
+  push:
+    branches: [feature/sprint2-integration]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: gradpath_ci
+          POSTGRES_PASSWORD: fictional_ci_only
+          POSTGRES_DB: gradpath_ci_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U gradpath_ci -d gradpath_ci_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      # Disposable runner-only fixture credentials, never shared database access.
+      TEST_DATABASE_URL: postgresql://gradpath_ci:fictional_ci_only@127.0.0.1:5432/gradpath_ci_test
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npm run db:generate
+      - run: npm run lint
+      - run: npm test
+      - run: npm run typecheck:server
+      - run: npx prisma validate
+      - run: npm run test:database
+      - run: npm run build
+      - name: Reject tracked local credentials and database artifacts
+        shell: bash
+        run: |
+          if git ls-files | grep -E '(^|/)\.env($|\.)|\.(pem|key|sqlite|sqlite3|db)$|(^|/)\.local-postgres/' | grep -vE '(^|/)\.env\.example$'; then
+            echo 'Unexpected private configuration or local database artifact is tracked.'
+            exit 1
+          fi
