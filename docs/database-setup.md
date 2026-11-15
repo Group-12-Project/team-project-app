@@ -72,8 +72,8 @@ npm run dev
 Expected response: `{"database":"connected"}`. `db:check` must confirm that Prisma
 can read the fictional profile and its two interests. The backend runs on port 3001
 by default and binds to `0.0.0.0` so hosting can reach it. Set `HOST=127.0.0.1`
-for loopback-only local access. Vite runs the frontend separately. The frontend still uses
-browser storage pending frontend API integration.
+for loopback-only local access. Vite runs the frontend separately. The frontend now reads and saves through relative `/api/profile` requests.
+Vite proxies `/api` to loopback port 3001.
 The GET/PATCH endpoints are implemented by Devin; Nick integrates the frontend,
 and John owns application wiring and integration verification.
 
@@ -203,3 +203,28 @@ Business checks for assignment dates and weekly time ranges are enforced in SQL.
 Run `npm run db:migrate` to apply the correction, then regenerate the Prisma client.
 The MySQL collation is not reproduced: PostgreSQL text uniqueness remains
 case-sensitive, as described above.
+
+
+## Sprint 2 integrated frontend and isolated verification (November 15)
+
+Ian selected Devin's existing PostgreSQL backend for this integration. Copy the
+placeholder-only `.env.example` privately and set `ENABLE_DEMO_PROFILE_API=true`
+for local fictional data. Start `npm run server:dev` and `npm run dev` in separate
+terminals. Open My Profile, edit name/interests/goal, then save or cancel.
+`HOST=127.0.0.1` is the default. Do not expose demo identity to public users.
+If changing the backend port, set `PROFILE_API_TARGET=http://127.0.0.1:PORT`
+when starting Vite. This is proxy configuration, never a credential.
+
+Provide **TEST_DATABASE_URL** for a separately provisioned empty PostgreSQL database
+whose name ends in `_test`, distinct from DATABASE_URL. Run `npm run test:database`.
+The wrapper selects that URL for migrations and fixtures, never the shared dev
+URL. It applies migrations, idempotent fictional seeds, and runs real HTTP and
+restart assertions. It removes its random user fixture; baseline fictional seeds
+remain in the test database. Never use a shared working database as a test DB.
+The API harness now requires this wrapper even for `db:verify-profile-api`.
+
+Current results and per-issue evidence: [verification](sprint2-verification.md).
+Each teammate must personally complete the [release checklist](sprint2-release-checklist.md).
+The existing hosted verification record is prior backend evidence, not proof of
+each member's integrated frontend run. No hosted credentials were available or
+used in this integration session.

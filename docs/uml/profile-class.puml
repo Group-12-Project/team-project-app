@@ -1,0 +1,78 @@
+@startuml
+hide methods
+skinparam classAttributeIconSize 0
+class users {
+  id: BigInt <<PK>>
+  full_name: varchar(150)
+  university_email: varchar(255) <<unique>>
+  role: users_role
+}
+class student_profiles {
+  user_id: BigInt <<PK, FK>>
+  preferred_name: varchar(100)?
+  career_goal: text?
+  student_status: varchar(50)?
+  program_id: BigInt? <<FK>>
+  concentration_id: BigInt? <<FK>>
+  expected_graduation: date?
+  gpa: decimal(4,2)?
+  recorded_completed_credits: decimal(5,1)?
+  recorded_required_credits: decimal(5,1)?
+}
+class profile_interests {
+  interest_id: BigInt <<PK>>
+  student_user_id: BigInt <<FK>>
+  interest_name: varchar(120)
+  display_order: int
+}
+class course_history {
+  history_id: BigInt <<PK>>
+  student_user_id: BigInt <<FK>>
+  course_id: BigInt? <<FK>>
+  term_id: BigInt? <<FK>>
+  course_code_snapshot: varchar(30)?
+  course_title_snapshot: varchar(200)?
+  completion_status: enum
+  earned_credits: decimal(4,1)
+}
+class programs {
+  program_id: BigInt <<PK>>
+  program_name: varchar(160)
+  required_credits: decimal(5,1)?
+}
+class concentrations {
+  concentration_id: BigInt <<PK>>
+  program_id: BigInt <<FK>>
+  concentration_name: varchar(160)
+}
+class courses {
+  course_id: BigInt <<PK>>
+  course_code: varchar(30)? <<unique>>
+  title: varchar(200)
+}
+class terms {
+  term_id: BigInt <<PK>>
+  term_name: varchar(40)
+  academic_year: int
+}
+users "1" -- "0..1" student_profiles
+student_profiles "1" -- "0..*" profile_interests
+student_profiles "1" -- "0..*" course_history
+programs "0..1" -- "0..*" student_profiles
+concentrations "0..1" -- "0..*" student_profiles
+programs "1" -- "0..*" concentrations
+courses "0..1" -- "0..*" course_history
+terms "0..1" -- "0..*" course_history
+note bottom of profile_interests
+Unique(student_user_id, interest_name).
+API normalizes case duplicates and enforces
+8 entries, 50 JS code units each.
+end note
+note bottom of student_profiles
+Sprint 2 subset of Devin's existing schema.
+Public ID sample-current-student-001 maps to 900001.
+Only name, goal and interests editable via PATCH.
+API limits: name 2..60, goal 3..300 JS code units.
+Other prototype entities are outside this diagram.
+end note
+@enduml

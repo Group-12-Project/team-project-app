@@ -1,3 +1,32 @@
+# Sprint 2 architecture
+
+Browser: `main.jsx` injects `profileApi` into App. App loads the complete profile
+and handles loading/missing/retry states. ProfilePage saves asynchronously and
+shows success only after a validated response. ProfileEditForm edits name,
+interests and goal, retains failed drafts and maps server field errors.
+
+`profileApi` → relative GET/PATCH `/api/profile` → Vite development proxy →
+Node HTTP `handleProfileRequest` → validated repository → Prisma → PostgreSQL.
+Repository updates lock the selected profile row, write supplied fields and
+interest rows in one transaction, and return a complete mapped profile.
+Reads use a repeatable-read transaction. Omitted PATCH fields remain unchanged.
+
+The server selects fictional user 900001 and maps it to public
+`sample-current-student-001`. The route requires ENABLE_DEMO_PROFILE_API=true
+and is disabled in production mode. This is development identity, not secure
+user authentication. Database credentials never enter the browser bundle.
+
+`profileService` localStorage functions remain for historical Sprint 1 tests.
+The application entry point always selects the API; backend failures have no
+sample/localStorage fallback. Existing UI styles and pathway service are retained.
+
+See [contract](profile-api-contract.md), [UML](uml/README.md),
+[verification](sprint2-verification.md) and [setup](database-setup.md).
+
+The original Sprint 1 design record follows as historical context.
+
+---
+
 # Sprint 1 profile implementation plan
 
 ## Objective

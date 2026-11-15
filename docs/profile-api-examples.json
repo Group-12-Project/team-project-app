@@ -1,5 +1,5 @@
 {
-  "provenance": "Actual local HTTP responses against hosted PostgreSQL. GET selects development profile 900001. PATCH responses use a temporary isolated fictional fixture with the same public alias in its test server; its history IDs therefore differ from the selected profile. Fixture deleted after verification.",
+  "provenance": "Actual local HTTP responses against an isolated PostgreSQL test database. GET selects development profile 900001. PATCH responses use a temporary isolated fictional fixture with the same public alias in its test server; its history IDs therefore differ from the selected profile. Fixture deleted after verification.",
   "selectedDevelopmentGet": {
     "status": 200,
     "response": {
@@ -15,19 +15,19 @@
       "careerGoal": "Build accessible educational software.",
       "courseHistory": [
         {
-          "id": "history-4",
+          "id": "history-1",
           "code": "ITCS 6114",
           "title": "Algorithms and Data Structures",
           "term": "Fall 2026"
         },
         {
-          "id": "history-5",
+          "id": "history-2",
           "code": "ITCS 6162",
           "title": "Knowledge Discovery in Databases",
           "term": "Fall 2026"
         },
         {
-          "id": "history-6",
+          "id": "history-3",
           "code": "ITIS 6155",
           "title": "Software Systems Design and Implementation",
           "term": "Spring 2026"
@@ -64,19 +64,19 @@
       "careerGoal": "Build accessible tools for graduate students.",
       "courseHistory": [
         {
-          "id": "history-10",
+          "id": "history-7",
           "code": "ITCS 6114",
           "title": "Algorithms and Data Structures",
           "term": "Fall 2026"
         },
         {
-          "id": "history-11",
+          "id": "history-8",
           "code": "ITCS 6162",
           "title": "Knowledge Discovery in Databases",
           "term": "Fall 2026"
         },
         {
-          "id": "history-12",
+          "id": "history-9",
           "code": "ITIS 6155",
           "title": "Software Systems Design and Implementation",
           "term": "Spring 2026"
