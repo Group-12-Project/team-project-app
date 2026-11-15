@@ -16,9 +16,25 @@ function getRoute() {
   return window.location.hash.replace(/^#\/?/, '') || 'home'
 }
 
-function App() {
+function App({ repository }) {
   const [route, setRoute] = useState(getRoute)
-  const [profile, setProfile] = useState(loadProfile)
+  const [profile, setProfile] = useState(() => repository ? null : loadProfile())
+  const [loadState, setLoadState] = useState(repository ? 'loading' : 'ready')
+  const [retry, setRetry] = useState(0)
+
+  useEffect(() => {
+    if (!repository) return
+    let active = true
+    repository.load().then((savedProfile) => {
+      if (active) {
+        setProfile(savedProfile)
+        setLoadState('ready')
+      }
+    }).catch((error) => {
+      if (active) setLoadState(error.code === 'PROFILE_NOT_FOUND' ? 'missing' : 'error')
+    })
+    return () => { active = false }
+  }, [repository, retry])
 
   useEffect(() => {
     const handleHashChange = () => setRoute(getRoute())
@@ -26,13 +42,25 @@ function App() {
     return () => window.removeEventListener('hashchange', handleHashChange)
   }, [])
 
+  if (loadState !== 'ready') {
+    return <main className="main-content">
+      {loadState === 'loading' ? <p role="status">Loading your profile…</p> : <>
+        <p role="alert">{loadState === 'missing' ? 'Your profile was not found. Contact the development team.' : 'We could not load your profile. Please try again.'}</p>
+        <button className="button button--primary" onClick={() => {
+          setLoadState('loading')
+          setRetry((value) => value + 1)
+        }}>Try again</button>
+      </>}
+    </main>
+  }
+
   return (
     <div className="app-shell">
       <header className="topbar">
         <a className="brand" href="#/" aria-label="GradPath home">
           GradPath
         </a>
-        <div className="current-user" aria-label="Signed in user">
+        <div className="current-user" aria-label="Fictional development profile">
           <span className="current-user__avatar" aria-hidden="true">
             {profile.preferredName
               .split(' ')
@@ -86,6 +114,7 @@ function App() {
               mode={route === 'profile/edit' ? 'edit' : 'view'}
               profile={profile}
               onProfileChange={setProfile}
+              repository={repository}
             />
           ) : (
             <section aria-labelledby="backlog-heading">
