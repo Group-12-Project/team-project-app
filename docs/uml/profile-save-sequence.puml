@@ -1,4 +1,5 @@
 @startuml
+skinparam backgroundColor white
 actor Student
 participant ProfileEditForm as Form
 participant ProfilePage as Page
