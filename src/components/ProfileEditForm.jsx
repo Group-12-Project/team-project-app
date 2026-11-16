@@ -1,13 +1,16 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { PROFILE_LIMITS, validateProfileDraft } from '../utils/profileValidation.js'
 
-function ProfileEditForm({ profile, onCancel, onSave }) {
+const EMPTY_ERRORS = {}
+
+function ProfileEditForm({ profile, onCancel, onSave, saving = false, serverErrors = EMPTY_ERRORS }) {
   const [draft, setDraft] = useState({
     preferredName: profile.preferredName,
     interestsText: profile.academicInterests.join(', '),
     careerGoal: profile.careerGoal,
   })
-  const [errors, setErrors] = useState({})
+  const [clientErrors, setErrors] = useState({})
+  const errors = { ...serverErrors, ...(serverErrors.academicInterests && { interestsText: serverErrors.academicInterests }), ...clientErrors }
   const preferredNameRef = useRef(null)
   const interestsRef = useRef(null)
   const careerGoalRef = useRef(null)
@@ -17,6 +20,14 @@ function ProfileEditForm({ profile, onCancel, onSave }) {
     interestsText: interestsRef,
     careerGoal: careerGoalRef,
   }
+
+  useEffect(() => {
+    const mapped = { ...serverErrors, ...(serverErrors.academicInterests && { interestsText: serverErrors.academicInterests }) }
+    const first = ['preferredName', 'interestsText', 'careerGoal'].find((key) => mapped[key])
+    if (first === 'preferredName') preferredNameRef.current?.focus()
+    if (first === 'interestsText') interestsRef.current?.focus()
+    if (first === 'careerGoal') careerGoalRef.current?.focus()
+  }, [serverErrors])
 
   function updateDraft(event) {
     const { name, value } = event.target
@@ -180,11 +191,11 @@ function ProfileEditForm({ profile, onCancel, onSave }) {
         </section>
 
         <div className="form-actions">
-          <button className="button button--secondary" type="button" onClick={onCancel}>
+          <button className="button button--secondary" type="button" onClick={onCancel} disabled={saving}>
             Cancel
           </button>
-          <button className="button button--primary" type="submit">
-            Save changes
+          <button className="button button--primary" type="submit" disabled={saving}>
+            {saving ? 'Saving…' : 'Save changes'}
           </button>
         </div>
       </form>

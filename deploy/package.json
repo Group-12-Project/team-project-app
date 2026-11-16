@@ -1,0 +1,23 @@
+{
+  "name": "gradpath-deployment",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check:config": "node check-config.mjs",
+    "build": "npm --prefix .. run db:generate && bun build server.ts --target=bun --outfile=dist/server.mjs",
+    "typecheck": "tsc --noEmit",
+    "preview": "prisma deploy --environment backend-preview",
+    "smoke": "bun smoke.ts"
+  },
+  "dependencies": {
+    "@prisma/composer": "0.38.0",
+    "@prisma/composer-prisma-cloud": "0.38.0",
+    "arktype": "2.2.9",
+    "prisma": "8.0.0-rc.33"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.6",
+    "bun": "1.4.4",
+    "typescript": "7.0.2"
+  }
+}

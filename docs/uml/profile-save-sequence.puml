@@ -1,0 +1,57 @@
+@startuml
+skinparam backgroundColor white
+actor Student
+participant ProfileEditForm as Form
+participant ProfilePage as Page
+participant profileApi as API
+participant handleProfileRequest as HTTP
+participant createProfileRepository as Repository
+participant "Prisma transaction" as ORM
+database PostgreSQL
+Student -> Form: Edit permitted fields; Save
+Form -> Form: validateProfileDraft; focus invalid control
+Form -> Page: handleSave(editable values)
+Page -> Page: Disable duplicate saves; retain draft
+Page -> API: save(values)
+API -> HTTP: PATCH /api/profile (JSON)
+HTTP -> Repository: update(body)
+Repository -> Repository: validateProfilePatch (shape, keys, values)
+alt Invalid request
+Repository --> HTTP: ProfileError (400/422)
+HTTP --> API: {error: {code, message, fields}}
+API --> Page: ProfileApiError
+Page -> Form: Field errors; focus first invalid control
+else Valid request
+Repository -> ORM: $transaction
+ORM -> PostgreSQL: SELECT user_id ... FOR UPDATE
+ORM -> PostgreSQL: Update supplied scalars; replace supplied interests
+ORM -> PostgreSQL: Read complete profile and relations
+PostgreSQL --> ORM: Persisted profile
+ORM -> PostgreSQL: COMMIT
+ORM --> Repository: Complete mapped response
+Repository --> HTTP: ProfileResponse
+HTTP --> API: 200 ProfileResponse
+alt Response received and valid
+API --> Page: Confirmed saved profile
+Page -> Page: Update view; announce success
+else Lost or invalid response
+API --> Page: Unconfirmed save error
+Page -> Page: Preserve draft; no success announcement
+Student -> Page: Check stored values
+Page -> API: load()
+API -> HTTP: GET /api/profile
+HTTP -> Repository: get()
+Repository -> ORM: RepeatableRead transaction
+ORM -> PostgreSQL: Read profile and relations
+PostgreSQL --> Page: Current stored values via response chain
+Page -> Page: Show stored values beside retained draft
+end
+end
+note over ORM, PostgreSQL
+Any transaction failure rolls back all writes.
+Missing profile: 404. Known unavailable DB: 503.
+Unexpected failure: sanitized 500.
+Concurrent same-field writes use last committed value;
+omitted fields remain untouched.
+end note
+@enduml

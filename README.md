@@ -1,3 +1,39 @@
+# GradPath Sprint 2 integration
+
+Current-student profile now uses Devin's PostgreSQL/Prisma backend as its source
+of truth. The UI supports committed saves, cancellation, field errors, retry and
+checking stored values after an unconfirmed save. Fictional development identity
+is not production authentication.
+
+```sh
+npm ci
+# Fresh checkout with PostgreSQL 17 installed:
+npm run db:local:init
+# Or configure private .env manually; see setup guide.
+npm run db:generate
+npm run db:migrate
+npm run db:seed
+npm run server:dev
+# In another terminal:
+npm run dev
+```
+
+[Database setup](docs/database-setup.md) · [API contract](docs/profile-api-contract.md) ·
+[Issue matrix and verification](docs/sprint2-verification.md) ·
+[Remaining human steps](docs/sprint2-your-next-steps.md) ·
+[Review/release checklist](docs/sprint2-release-checklist.md) ·
+[AI design corrections](docs/ai-design-review.md) · [UML](docs/uml/)
+
+Verification: `npm run lint`, `npm test`, `npm run typecheck:server`,
+`npm run test:database` (requires separate TEST_DATABASE_URL), `npm run build`.
+Render diagrams with `npm run uml:render` (PlantUML required).
+
+The earlier Sprint 1 documentation below describes historical behavior.
+Production entry point now uses the API; localStorage service remains for legacy
+unit tests and is not a network-failure fallback.
+
+---
+
 # GradPath
 
 GradPath is a graduate-degree planning application for prospective students, current graduate
@@ -60,6 +96,12 @@ npm install
 ```
 
 ## Running locally
+
+For the hosted Prisma Postgres database and backend health server, follow
+[database setup and team handoff](docs/database-setup.md). The frontend profile
+currently continues to use browser storage while API integration is pending.
+Development-only GET/PATCH `/api/profile`, database verification, and response
+examples are documented in the [profile API handoff](docs/profile-api-implementation.md).
 
 ```bash
 npm run dev

@@ -1,0 +1,78 @@
+@startuml
+skinparam backgroundColor white
+skinparam classAttributeIconSize 0
+class users {
+  {field} id: BigInt <<PK>>
+  {field} full_name: varchar(150)
+  {field} university_email: varchar(255) <<unique>>
+  {field} role: users_role
+}
+class student_profiles {
+  {field} user_id: BigInt <<PK, FK>>
+  {field} preferred_name: varchar(100)?
+  {field} career_goal: text?
+  {field} student_status: varchar(50)?
+  {field} program_id: BigInt? <<FK>>
+  {field} concentration_id: BigInt? <<FK>>
+  {field} expected_graduation: date?
+  {field} gpa: decimal(4,2)?
+  {field} recorded_completed_credits: decimal(5,1)?
+  {field} recorded_required_credits: decimal(5,1)?
+}
+class profile_interests {
+  {field} interest_id: BigInt <<PK>>
+  {field} student_user_id: BigInt <<FK>>
+  {field} interest_name: varchar(120)
+  {field} display_order: int
+}
+class course_history {
+  {field} history_id: BigInt <<PK>>
+  {field} student_user_id: BigInt <<FK>>
+  {field} course_id: BigInt? <<FK>>
+  {field} term_id: BigInt? <<FK>>
+  {field} course_code_snapshot: varchar(30)?
+  {field} course_title_snapshot: varchar(200)?
+  {field} completion_status: enum
+  {field} earned_credits: decimal(4,1)
+}
+class programs {
+  {field} program_id: BigInt <<PK>>
+  {field} program_name: varchar(160)
+  {field} required_credits: decimal(5,1)?
+}
+class concentrations {
+  {field} concentration_id: BigInt <<PK>>
+  {field} program_id: BigInt <<FK>>
+  {field} concentration_name: varchar(160)
+}
+class courses {
+  {field} course_id: BigInt <<PK>>
+  {field} course_code: varchar(30)? <<unique>>
+  {field} title: varchar(200)
+}
+class terms {
+  {field} term_id: BigInt <<PK>>
+  {field} term_name: varchar(40)
+  {field} academic_year: int
+}
+users "1" -- "0..1" student_profiles
+student_profiles "1" -- "0..*" profile_interests
+student_profiles "1" -- "0..*" course_history
+programs "0..1" -- "0..*" student_profiles
+concentrations "0..1" -- "0..*" student_profiles
+programs "1" -- "0..*" concentrations
+courses "0..1" -- "0..*" course_history
+terms "0..1" -- "0..*" course_history
+note bottom of profile_interests
+Unique(student_user_id, interest_name).
+API normalizes case duplicates and enforces
+8 entries, 50 JS code units each.
+end note
+note bottom of student_profiles
+Sprint 2 subset of Devin's existing schema.
+Public ID sample-current-student-001 maps to 900001.
+Only name, goal and interests editable via PATCH.
+API limits: name 2..60, goal 3..300 JS code units.
+Other prototype entities are outside this diagram.
+end note
+@enduml
